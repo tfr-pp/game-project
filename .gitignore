@@ -1,0 +1,12 @@
+# BUILD FILES
+**/bin/
+**/obj/
+**/*.obj
+**/*.bin
+**/*.exe
+
+ # IDE
+ **/.vscode/
+ **/.idea/
+ 
+ 
