@@ -1,142 +1,146 @@
 using System;
-using System.Collections.Generic;
-using System.Globalization;
-using jeu.Core.Effects;
-using jeu.Core.Localization;
-using jeu.Core.Settings;
-using jeu.ScreenManagers;
-using jeu.Screens;
+using jeu.Core.Classes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace jeu.Core
 {
-    /// <summary>
-    /// The main class for the game, responsible for managing game components, settings, 
-    /// and platform-specific configurations.
-    /// </summary>
-    /// <remarks>
-    /// This class is the entry point for the game and handles initialization, content loading,
-    /// and screen management.
-    /// </remarks>}
-    public class jeuGame : Game
-    {   
-        
-        // Resources for drawing.
-        private GraphicsDeviceManager graphicsDeviceManager;
 
-        // Manages the game's screen transitions and screens.
-        private ScreenManager screenManager;
+	public class JeuGame : Game
+	{
+		private GraphicsDeviceManager _graphics;
+		private SpriteBatch _spriteBatch;
 
-        // Manages game settings, such as preferences and configurations.
-        private SettingsManager<jeuSettings> settingsManager;
+		public Track Track { get; private set; }
+		public Car Car { get; private set; }
+		public int Passengers { get; private set; } = 5;
 
-        // Manages leaderboard data for tracking high scores and achievements.
-        private SettingsManager<jeuLeaderboard> leaderboardManager;
+		Texture2D pixel;
 
-        // Texture for rendering particles.
-        private Texture2D particleTexture;
+		SpriteFont font;
 
-        // Manages particle effects in the game.
-        private ParticleManager particleManager;
+		public JeuGame()
+		{
+			_graphics = new GraphicsDeviceManager(this);
+			Content.RootDirectory = "Content";
+			IsMouseVisible = true;
+			Track = new Track(
+			[
+				new(100, 100),
+				new(50, 450),
+				new(200, 150),
+				new(700, 100),
+				new(700, 200),
+				new(350, 200),
+				new(300, 300),
+				new(700, 450)
+			], true);
+			Car = new Car(Track);
+		}
 
-        /// <summary>
-        /// Indicates if the game is running on a mobile platform.
-        /// </summary>
-        public readonly static bool IsMobile = OperatingSystem.IsAndroid() || OperatingSystem.IsIOS();
+		protected override void LoadContent()
+		{
+			_spriteBatch = new SpriteBatch(GraphicsDevice);
 
-        /// <summary>
-        /// Indicates if the game is running on a desktop platform.
-        /// </summary>
-        public readonly static bool IsDesktop =
-            OperatingSystem.IsMacOS() || OperatingSystem.IsLinux() || OperatingSystem.IsWindows();
+			pixel = new Texture2D(GraphicsDevice, 1, 1);
+			pixel.SetData([Color.White]);
 
-        /// <summary>
-        /// Initializes a new instance of the game. Configures platform-specific settings, 
-        /// initializes services like settings and leaderboard managers, and sets up the 
-        /// screen manager for screen transitions.
-        /// </summary>
-        public jeuGame()
-        {
-            graphicsDeviceManager = new GraphicsDeviceManager(this);
+			font = Content.Load<SpriteFont>("Default");
+		}
 
-            // Share GraphicsDeviceManager as a service.
-            Services.AddService(typeof(GraphicsDeviceManager), graphicsDeviceManager);
+		protected override void Update(GameTime gameTime)
+		{
+			var k = Keyboard.GetState();
 
-            // Determine the appropriate settings storage based on the platform.
-            ISettingsStorage storage;
-            if (IsMobile)
-            {
-                storage = new MobileSettingsStorage();
-                graphicsDeviceManager.IsFullScreen = true;
-                IsMouseVisible = false;
-            }
-            else if (IsDesktop)
-            {
-                storage = new DesktopSettingsStorage();
-                graphicsDeviceManager.IsFullScreen = false;
-                IsMouseVisible = true;
-            }
-            else
-            {
-                throw new PlatformNotSupportedException();
-            }
+			if (k.IsKeyDown(Keys.Escape)) Exit();
 
-            // Initialize settings and leaderboard managers.
-            settingsManager = new SettingsManager<jeuSettings>(storage);
-            Services.AddService(typeof(SettingsManager<jeuSettings>), settingsManager);
+			float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            leaderboardManager = new SettingsManager<jeuLeaderboard>(storage);
-            Services.AddService(typeof(SettingsManager<jeuLeaderboard>), leaderboardManager);
+			if (k.IsKeyDown(Keys.Up)) Car.Accelerate(dt);
+			else if (k.IsKeyDown(Keys.Down)) Car.Decelerate(dt);
+			else Car.ApplyFriction(dt);
 
-            Content.RootDirectory = "Content";
+			Car.Update(dt);
 
-            // Configure screen orientations.
-            graphicsDeviceManager.SupportedOrientations =
-                DisplayOrientation.LandscapeLeft | DisplayOrientation.LandscapeRight;
+			base.Update(gameTime);
+		}
 
-            // Initialize the screen manager.
-            screenManager = new ScreenManager(this);
-            Components.Add(screenManager);
-        }
+		private void DrawTrackLine()
+		{
+			for (int i = 0; i < Track.Points.Count - 1; i++)
+			{
+				DrawLine(_spriteBatch, Track.Points[i], Track.Points[i + 1], Color.Gray, 2f);
+			}
+		}
 
-        /// <summary>
-        /// Initializes the game, including setting up localization and adding the 
-        /// initial screens to the ScreenManager.
-        /// </summary>
-        protected override void Initialize()
-        {
-            base.Initialize();
 
-            // Load supported languages and set the default language.
-            List<CultureInfo> cultures = LocalizationManager.GetSupportedCultures();
-            var languages = new List<CultureInfo>();
-            for (int i = 0; i < cultures.Count; i++)
-            {
-                languages.Add(cultures[i]);
-            }
+		protected override void Draw(GameTime gameTime)
+		{
+			GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            var selectedLanguage = languages[settingsManager.Settings.Language].Name;
-            LocalizationManager.SetCulture(selectedLanguage);
 
-            // Add background and main menu screens.
-            screenManager.AddScreen(new BackgroundScreen(), null);
-            screenManager.AddScreen(new MainMenuScreen(), null);
-        }
+			_spriteBatch.Begin();
 
-        /// <summary>
-        /// Loads game content, such as textures and particle systems.
-        /// </summary>
-        protected override void LoadContent()
-        {
-            base.LoadContent();
+			DrawTrackLine();
 
-            // Load a texture for particles and initialize the particle manager.
-            particleTexture = Content.Load<Texture2D>("Sprites/blank");
-            particleManager = new ParticleManager(particleTexture, new Vector2(400, 200));
+			_spriteBatch.DrawString(
+				font,
+				$"Speed: {Car.Speed:0.00} px/s",
+				new(10, 10),
+				Color.Black
+			);
 
-            // Share the particle manager as a service.
-            Services.AddService(typeof(ParticleManager), particleManager);
-        }
-    }
+			_spriteBatch.DrawString(
+				font,
+				$"Position: {Car.Position.X:0}:{Car.Position.Y:0}",
+				new(10, 30),
+				Color.Black
+			);
+
+			_spriteBatch.DrawString(
+				font,
+				$"Completion: {Car.PositionAlongTrack / Track.TotalLength * 100:0.00}%",
+				new(10, 50),
+				Color.Black
+			);
+
+			_spriteBatch.Draw(pixel,
+			position: Car.Position,
+			sourceRectangle: null,
+			color: Color.Green,
+			rotation: Car.Rotation,
+			origin: new Vector2(0.5f, 0.5f),
+			scale: new Vector2(40, 40),
+			effects: SpriteEffects.None,
+			layerDepth: 0f);
+
+			_spriteBatch.End();
+
+			base.Draw(gameTime);
+		}
+
+		private void DrawLine(SpriteBatch sb, Vector2 start, Vector2 end, Color color, float thickness)
+		{
+			Vector2 edge = end - start;
+			float angle = (float)Math.Atan2(edge.Y, edge.X);
+
+			sb.Draw(
+				pixel,
+				new Rectangle(
+					(int)start.X - 1,
+					(int)start.Y - 1,
+					(int)edge.Length() + 2,
+					(int)thickness
+				),
+				null,
+				color,
+				angle,
+				Vector2.Zero,
+				SpriteEffects.None,
+				0f
+			);
+		}
+
+	}
 }
