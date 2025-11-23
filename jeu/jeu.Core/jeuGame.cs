@@ -9,12 +9,15 @@ namespace jeu.Core
 
 	public class JeuGame : Game
 	{
+		// Do not remove this field even if it seems unused
 		private GraphicsDeviceManager _graphics;
 		private SpriteBatch _spriteBatch;
 
 		public Track Track { get; private set; }
 		public Car Car { get; private set; }
 		public int Passengers { get; private set; } = 5;
+
+		private readonly EnemyManager enemyManager = new();
 
 		Texture2D pixel;
 
@@ -47,6 +50,9 @@ namespace jeu.Core
 			pixel.SetData([Color.White]);
 
 			font = Content.Load<SpriteFont>("Default");
+
+			enemyManager.LoadContent(GraphicsDevice);
+			enemyManager.Add(new HorizontalPatrolEnemy(16f, new Vector2(400, 150), new Vector2(400, 250)));
 		}
 
 		protected override void Update(GameTime gameTime)
@@ -62,6 +68,16 @@ namespace jeu.Core
 			else Car.ApplyFriction(dt);
 
 			Car.Update(dt);
+
+			foreach (var enemy in enemyManager.GetEnemies())
+			{
+				if (Car.Hitbox.Intersects(enemy.Hitbox))
+				{
+					Car.HitEnemy(enemy.Speed);
+				}
+			}
+
+			enemyManager.Update(gameTime);
 
 			base.Update(gameTime);
 		}
@@ -93,27 +109,21 @@ namespace jeu.Core
 
 			_spriteBatch.DrawString(
 				font,
-				$"Position: {Car.Position.X:0}:{Car.Position.Y:0}",
+				$"Completion: {Car.PositionAlongTrack / Track.TotalLength * 100:0.00}%",
 				new(10, 30),
 				Color.Black
 			);
 
 			_spriteBatch.DrawString(
 				font,
-				$"Completion: {Car.PositionAlongTrack / Track.TotalLength * 100:0.00}%",
+				$"Passengers: {Car.Passengers}",
 				new(10, 50),
 				Color.Black
 			);
 
-			_spriteBatch.Draw(pixel,
-			position: Car.Position,
-			sourceRectangle: null,
-			color: Color.Green,
-			rotation: Car.Rotation,
-			origin: new Vector2(0.5f, 0.5f),
-			scale: new Vector2(40, 40),
-			effects: SpriteEffects.None,
-			layerDepth: 0f);
+			Car.Draw(_spriteBatch, pixel);
+
+			enemyManager.Draw(_spriteBatch);
 
 			_spriteBatch.End();
 
