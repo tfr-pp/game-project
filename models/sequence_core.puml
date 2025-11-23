@@ -1,0 +1,41 @@
+@startuml
+title Diagramme de séquence jeu vidéo
+
+actor Joueur
+participant MyGame
+participant Player
+participant SaveManager
+participant LevelsSave
+participant LevelSave
+participant XsltTransformer
+participant XmlValidator
+
+Joueur -> MyGame : Démarre le jeu
+MyGame -> SaveManager : LoadLevels()
+SaveManager -> LevelsSave : Lit SaveLevels.xml
+SaveManager --> MyGame : Liste des niveaux chargée
+
+loop "Chaque frame"
+  Joueur -> Player : Appuie sur flèches
+  Player -> Player : HandleInput()
+  Player -> GameObject : Update()
+  MyGame -> Player : Draw()
+end
+
+Joueur -> MyGame : Niveau terminé
+MyGame -> SaveManager : CompleteLevel(id)
+SaveManager -> LevelsSave : Met à jour le niveau
+LevelsSave -> LevelSave : Completed = true
+SaveManager --> MyGame : Sauvegarde effectuée
+
+MyGame -> SaveManager : IsLevelUnlocked(id + 1)
+SaveManager -> LevelsSave : Vérifie progression
+SaveManager --> MyGame : Niveau suivant débloqué
+
+MyGame -> XsltTransformer : Générer le HTML
+XsltTransformer --> MyGame : HTML généré
+
+MyGame -> XmlValidator : Valider le XML avec le XSD
+XmlValidator --> MyGame : OK
+
+@enduml

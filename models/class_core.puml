@@ -1,0 +1,78 @@
+@startuml
+title Diagramme de classes jeu vidéo
+
+class MyGame {
+  - _graphics : GraphicsDeviceManager
+  - _spriteBatch : SpriteBatch
+  - _player : Player
+  - _saveManager : SaveManager
+  + Initialize()
+  + LoadContent()
+  + Update(gameTime)
+  + Draw(gameTime)
+}
+
+class Sprite {
+  - _texture : Texture2D
+  - _position : Vector2
+  - _size : int
+  - _color : Color
+  - static _sizeMin : int
+  - static _sizeMax : int
+  + _Texture { get; init; }
+  + _Size { get; set; }
+  + _Rect { get; }
+  + Draw(spriteBatch)
+}
+
+class GameObject {
+  - _speed : Vector2
+  - _speedAcc : float
+  - _speedDec : float
+  + Update(gameTime)
+}
+
+class Player {
+  + HandleInput()
+  + Update(gameTime)
+}
+
+class SaveManager {
+  + LoadLevels() : LevelsSave
+  + CompleteLevel(id : int)
+  + IsLevelUnlocked(id : int) : bool
+}
+
+class LevelsSave {
+  + Levels : List<LevelSave>
+}
+
+class LevelSave {
+  + Id : int
+  + Completed : bool
+}
+
+class XmlValidator {
+  + Validate(xmlPath, xsdPath)
+}
+
+class XsltTransformer {
+  + Transform(xmlPath, xslPath, outputPath)
+}
+
+class PlayerProfile {
+  + Id : string
+  + Name : string
+  + CreationDate : DateTime
+}
+
+MyGame --> Player
+MyGame --> SaveManager
+SaveManager --> LevelsSave
+LevelsSave --> LevelSave
+MyGame --> XmlValidator
+MyGame --> XsltTransformer
+MyGame --> PlayerProfile
+GameObject <|-- Player
+Sprite <|-- GameObject
+@enduml
