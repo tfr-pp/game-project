@@ -1,0 +1,33 @@
+@startuml
+'https://plantuml.com/class-diagram
+title Classes du jeu vidéo (getter/setter implicites)
+
+Car --> Track
+
+class Car {
+- static MAX_SPEED: float
+- static ACCELERATION: float
+- static FRICTION: float
++ positionAlongTrack: float
++ speed: float
++ position: Vector2
++ rotation: float
++ Car(track: Track)
++ update(dt: float)
++ accelerate(dt: float)
++ decelerate(dt: float)
++ applyFriction(dt: float)
+}
+
+class Track {
++ points: List<Vector2>
+- segmentLength: List<float>
+- totalLength: float
++ Track(points: List<Vector2>, clean: bool)
++ precompute()
++ getPositionAtDistance(s: float): Vector2
++ getTangentAtDistance(s: float): Vector2
++ static catmullRom(p0: Vector2, p1: Vector2, p2: Vector2, p3: Vector2, t: float): Vector2
+}
+
+@enduml
