@@ -10,12 +10,12 @@ namespace jeu.Core
 	public class JeuGame : Game
 	{
 		// Do not remove this field even if it seems unused
-		private GraphicsDeviceManager _graphics;
-		private SpriteBatch _spriteBatch;
+		private GraphicsDeviceManager graphics;
+		private SpriteBatch spriteBatch;
 
-		public Track Track { get; private set; }
-		public Car Car { get; private set; }
-		public int Passengers { get; private set; } = 5;
+		public Track track { get; private set; }
+		public Car car { get; private set; }
+		public int passengers { get; private set; } = 5;
 
 		private readonly EnemyManager enemyManager = new();
 
@@ -25,10 +25,10 @@ namespace jeu.Core
 
 		public JeuGame()
 		{
-			_graphics = new GraphicsDeviceManager(this);
+			graphics = new GraphicsDeviceManager(this);
 			Content.RootDirectory = "Content";
 			IsMouseVisible = true;
-			Track = new Track(
+			track = new Track(
 			[
 				new(100, 100),
 				new(50, 450),
@@ -39,12 +39,12 @@ namespace jeu.Core
 				new(300, 300),
 				new(700, 450)
 			], true);
-			Car = new Car(Track);
+			car = new Car(track);
 		}
 
 		protected override void LoadContent()
 		{
-			_spriteBatch = new SpriteBatch(GraphicsDevice);
+			spriteBatch = new SpriteBatch(GraphicsDevice);
 
 			pixel = new Texture2D(GraphicsDevice, 1, 1);
 			pixel.SetData([Color.White]);
@@ -63,17 +63,17 @@ namespace jeu.Core
 
 			float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-			if (k.IsKeyDown(Keys.Up)) Car.Accelerate(dt);
-			else if (k.IsKeyDown(Keys.Down)) Car.Decelerate(dt);
-			else Car.ApplyFriction(dt);
+			if (k.IsKeyDown(Keys.Up)) car.Accelerate(dt);
+			else if (k.IsKeyDown(Keys.Down)) car.Decelerate(dt);
+			else car.ApplyFriction(dt);
 
-			Car.Update(dt);
+			car.Update(dt);
 
 			foreach (var enemy in enemyManager.GetEnemies())
 			{
-				if (Car.Hitbox.Intersects(enemy.Hitbox))
+				if (car.hitbox.Intersects(enemy.Hitbox))
 				{
-					Car.HitEnemy(enemy.Speed);
+					car.HitEnemy(enemy.Speed);
 				}
 			}
 
@@ -84,9 +84,9 @@ namespace jeu.Core
 
 		private void DrawTrackLine()
 		{
-			for (int i = 0; i < Track.Points.Count - 1; i++)
+			for (int i = 0; i < track.points.Count - 1; i++)
 			{
-				DrawLine(_spriteBatch, Track.Points[i], Track.Points[i + 1], Color.Gray, 2f);
+				DrawLine(spriteBatch, track.points[i], track.points[i + 1], Color.Gray, 2f);
 			}
 		}
 
@@ -96,36 +96,36 @@ namespace jeu.Core
 			GraphicsDevice.Clear(Color.CornflowerBlue);
 
 
-			_spriteBatch.Begin();
+			spriteBatch.Begin();
 
 			DrawTrackLine();
 
-			_spriteBatch.DrawString(
+			spriteBatch.DrawString(
 				font,
-				$"Speed: {Car.Speed:0.00} px/s",
+				$"Speed: {car.speed:0.00} px/s",
 				new(10, 10),
 				Color.Black
 			);
 
-			_spriteBatch.DrawString(
+			spriteBatch.DrawString(
 				font,
-				$"Completion: {Car.PositionAlongTrack / Track.TotalLength * 100:0.00}%",
+				$"Completion: {car.positionAlongTrack / track.getTotalLength * 100:0.00}%",
 				new(10, 30),
 				Color.Black
 			);
 
-			_spriteBatch.DrawString(
+			spriteBatch.DrawString(
 				font,
-				$"Passengers: {Car.Passengers}",
+				$"Passengers: {car.passengers}",
 				new(10, 50),
 				Color.Black
 			);
 
-			Car.Draw(_spriteBatch, pixel);
+			car.Draw(spriteBatch, pixel);
 
-			enemyManager.Draw(_spriteBatch);
+			enemyManager.Draw(spriteBatch);
 
-			_spriteBatch.End();
+			spriteBatch.End();
 
 			base.Draw(gameTime);
 		}

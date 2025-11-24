@@ -5,38 +5,38 @@ namespace jeu.Core.Classes;
 
 public class Track
 {
-	public List<Vector2> Points { get; private set; }
+	public List<Vector2> points { get; private set; }
 	private List<float> segmentLengths;
 	private float totalLength;
 	public float getTotalLength => totalLength;
 
-	public Track(List<Vector2> points, bool clean = true)
+	public Track(List<Vector2> init_points, bool clean = true)
 	// points where track rail goes and "clean" the curving or not of path
 	{
-		if (clean && points.Count >= 4)
+		if (clean && init_points.Count >= 4)
 		{
-			Points = [];
+			points = [];
 
 			var keyPoints = new List<Vector2>
 			{
-				points[0]
+				init_points[0]
 			};
-			keyPoints.AddRange(points);
-			keyPoints.Add(points[^1]);
+			keyPoints.AddRange(init_points);
+			keyPoints.Add(init_points[^1]);
 
 			for (int i = 0; i < keyPoints.Count - 3; i++)
 			{
 				for (float t = 0; t < 1; t += 0.01f)
 				{
-					Points.Add(CatmullRom(keyPoints[i], keyPoints[i + 1], keyPoints[i + 2], keyPoints[i + 3], t));
+					points.Add(CatmullRom(keyPoints[i], keyPoints[i + 1], keyPoints[i + 2], keyPoints[i + 3], t));
 				}
 			}
 
-			Points.Add(keyPoints[keyPoints.Count - 2]);
+			points.Add(keyPoints[keyPoints.Count - 2]);
 		}
 		else
 		{
-			Points = points;
+			points = init_points;
 		}
 		Precompute();
 	}
@@ -45,9 +45,9 @@ public class Track
 	{
 		segmentLengths = [];
 		totalLength = 0f;
-		for (int i = 0; i < Points.Count - 1; i++)
+		for (int i = 0; i < points.Count - 1; i++)
 		{
-			float len = Vector2.Distance(Points[i], Points[i + 1]);
+			float len = Vector2.Distance(points[i], points[i + 1]);
 			segmentLengths.Add(len);
 			totalLength += len;
 		}
@@ -55,29 +55,29 @@ public class Track
 
 	public Vector2 GetPositionAtDistance(float s)
 	{
-		if (s <= 0f) return Points[0];
-		if (s >= totalLength) return Points[^1];
+		if (s <= 0f) return points[0];
+		if (s >= totalLength) return points[^1];
 
 		float remaining = s;
 		for (int i = 0; i < segmentLengths.Count; i++)
 		{
 			if (remaining <= segmentLengths[i])
-				return Vector2.Lerp(Points[i], Points[i + 1], remaining / segmentLengths[i]);
+				return Vector2.Lerp(points[i], points[i + 1], remaining / segmentLengths[i]);
 			remaining -= segmentLengths[i];
 		}
-		return Points[^1];
+		return points[^1];
 	}
 
 	public Vector2 GetTangentAtDistance(float s)
 	{
-		if (s <= 0f) return Vector2.Normalize(Points[1] - Points[0]);
-		if (s >= totalLength) return Vector2.Normalize(Points[^1] - Points[^2]);
+		if (s <= 0f) return Vector2.Normalize(points[1] - points[0]);
+		if (s >= totalLength) return Vector2.Normalize(points[^1] - points[^2]);
 
 		float remaining = s;
 		for (int i = 0; i < segmentLengths.Count; i++)
 		{
 			if (remaining <= segmentLengths[i])
-				return Vector2.Normalize(Points[i + 1] - Points[i]);
+				return Vector2.Normalize(points[i + 1] - points[i]);
 			remaining -= segmentLengths[i];
 		}
 		return Vector2.UnitX;

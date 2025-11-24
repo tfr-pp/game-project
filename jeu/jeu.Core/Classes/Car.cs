@@ -10,21 +10,21 @@ public class Car(Track track)
 	private static readonly float ACCELERATION = 400f;
 	private static readonly float FRICTION = 200f;
 
-	private readonly Track _track = track;
-	public float PositionAlongTrack { get; private set; } = 0f;
-	public float Speed { get; private set; } = 0f;
-	public Vector2 Position => _track.GetPositionAtDistance(PositionAlongTrack);
-	public float Rotation { get; private set; }
-	public int Passengers { get; private set; } = 5;
+	private readonly Track track = track;
+	public float positionAlongTrack { get; private set; } = 0f;
+	public float speed { get; private set; } = 0f;
+	public Vector2 position => track.GetPositionAtDistance(positionAlongTrack);
+	public float rotation { get; private set; }
+	public int passengers { get; private set; } = 5;
 
 	private readonly Vector2 _halfSize = new(25f, 12f);
 
-	public Rectangle Hitbox => GetAABB();
+	public Rectangle hitbox => GetAABB();
 
 	public Vector2[] GetRotatedHitboxCorners()
 	{
-		var cos = MathF.Cos(Rotation);
-		var sin = MathF.Sin(Rotation);
+		var cos = MathF.Cos(rotation);
+		var sin = MathF.Sin(rotation);
 
 		var local = new Vector2[]
 		{
@@ -40,8 +40,8 @@ public class Car(Track track)
 			var x = local[i].X;
 			var y = local[i].Y;
 			corners[i] = new Vector2(
-				x * cos - y * sin + Position.X,
-				x * sin + y * cos + Position.Y
+				x * cos - y * sin + position.X,
+				x * sin + y * cos + position.Y
 			);
 		}
 		return corners;
@@ -63,57 +63,57 @@ public class Car(Track track)
 
 	private void ClampPositionAlongTrack()
 	{
-		if (PositionAlongTrack < 0f)
+		if (positionAlongTrack < 0f)
 		{
-			Speed = 0f;
-			PositionAlongTrack = 0f;
+			speed = 0f;
+			positionAlongTrack = 0f;
 		}
-		else if (PositionAlongTrack > _track.TotalLength)
+		else if (positionAlongTrack > track.getTotalLength)
 		{
-			Speed = 0f;
-			PositionAlongTrack = _track.TotalLength;
+			speed = 0f;
+			positionAlongTrack = track.getTotalLength;
 		}
 	}
 
 	public void Update(float dt)
 	{
-		PositionAlongTrack += Speed * dt;
+		positionAlongTrack += speed * dt;
 
 		ClampPositionAlongTrack();
 
-		var tangent = _track.GetTangentAtDistance(PositionAlongTrack);
-		Rotation = MathF.Atan2(tangent.Y, tangent.X);
+		var tangent = track.GetTangentAtDistance(positionAlongTrack);
+		rotation = MathF.Atan2(tangent.Y, tangent.X);
 	}
 
 	public void Accelerate(float dt)
 	{
-		Speed = Math.Clamp(Speed + (ACCELERATION * dt), -MAX_SPEED, MAX_SPEED);
+		speed = Math.Clamp(speed + (ACCELERATION * dt), -MAX_SPEED, MAX_SPEED);
 	}
 
 	public void Decelerate(float dt)
 	{
-		Speed = Math.Clamp(Speed - (ACCELERATION * dt), -MAX_SPEED, MAX_SPEED);
+		speed = Math.Clamp(speed - (ACCELERATION * dt), -MAX_SPEED, MAX_SPEED);
 	}
 
 	public void ApplyFriction(float dt)
 	{
-		if (Speed > 0) Speed = Math.Max(0, Speed - FRICTION * dt);
-		else if (Speed < 0) Speed = Math.Min(0, Speed + FRICTION * dt);
+		if (speed > 0) speed = Math.Max(0, speed - FRICTION * dt);
+		else if (speed < 0) speed = Math.Min(0, speed + FRICTION * dt);
 	}
 
 	public void HitEnemy(float enemySpeed)
 	{
-		Passengers = Math.Max(0, Passengers - 1);
+		passengers = Math.Max(0, passengers - 1);
 
-		var relative = enemySpeed - Speed;
+		var relative = enemySpeed - speed;
 
 		var impulse = MathF.Abs(relative) * 0.8f + 100f;
 
-		var direction = relative != 0f ? MathF.Sign(relative) : (Speed > 0f ? -1f : 1f);
+		var direction = relative != 0f ? MathF.Sign(relative) : (speed > 0f ? -1f : 1f);
 
-		Speed = Math.Clamp(Speed + direction * impulse, -MAX_SPEED, MAX_SPEED);
+		speed = Math.Clamp(speed + direction * impulse, -MAX_SPEED, MAX_SPEED);
 
-		PositionAlongTrack += Speed * 0.16f;
+		positionAlongTrack += speed * 0.16f;
 
 		ClampPositionAlongTrack();
 	}
@@ -121,10 +121,10 @@ public class Car(Track track)
 	public void Draw(SpriteBatch spriteBatch, Texture2D pixel)
 	{
 		spriteBatch.Draw(pixel,
-			position: Position,
+			position: position,
 			sourceRectangle: null,
 			color: Color.Green,
-			rotation: Rotation,
+			rotation: rotation,
 			origin: new Vector2(0.5f, 0.5f),
 			scale: new Vector2(40, 40),
 			effects: SpriteEffects.None,
