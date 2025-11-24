@@ -6,10 +6,12 @@ namespace jeu.Core.Classes;
 public class Track
 {
 	public List<Vector2> Points { get; private set; }
-	private List<float> _segmentLengths;
-	private float _totalLength;
+	private List<float> segmentLengths;
+	private float totalLength;
+	public float getTotalLength => totalLength;
 
 	public Track(List<Vector2> points, bool clean = true)
+	// points where track rail goes and "clean" the curving or not of path
 	{
 		if (clean && points.Count >= 4)
 		{
@@ -41,29 +43,27 @@ public class Track
 
 	private void Precompute()
 	{
-		_segmentLengths = [];
-		_totalLength = 0f;
+		segmentLengths = [];
+		totalLength = 0f;
 		for (int i = 0; i < Points.Count - 1; i++)
 		{
 			float len = Vector2.Distance(Points[i], Points[i + 1]);
-			_segmentLengths.Add(len);
-			_totalLength += len;
+			segmentLengths.Add(len);
+			totalLength += len;
 		}
 	}
-
-	public float TotalLength => _totalLength;
 
 	public Vector2 GetPositionAtDistance(float s)
 	{
 		if (s <= 0f) return Points[0];
-		if (s >= _totalLength) return Points[^1];
+		if (s >= totalLength) return Points[^1];
 
 		float remaining = s;
-		for (int i = 0; i < _segmentLengths.Count; i++)
+		for (int i = 0; i < segmentLengths.Count; i++)
 		{
-			if (remaining <= _segmentLengths[i])
-				return Vector2.Lerp(Points[i], Points[i + 1], remaining / _segmentLengths[i]);
-			remaining -= _segmentLengths[i];
+			if (remaining <= segmentLengths[i])
+				return Vector2.Lerp(Points[i], Points[i + 1], remaining / segmentLengths[i]);
+			remaining -= segmentLengths[i];
 		}
 		return Points[^1];
 	}
@@ -71,14 +71,14 @@ public class Track
 	public Vector2 GetTangentAtDistance(float s)
 	{
 		if (s <= 0f) return Vector2.Normalize(Points[1] - Points[0]);
-		if (s >= _totalLength) return Vector2.Normalize(Points[^1] - Points[^2]);
+		if (s >= totalLength) return Vector2.Normalize(Points[^1] - Points[^2]);
 
 		float remaining = s;
-		for (int i = 0; i < _segmentLengths.Count; i++)
+		for (int i = 0; i < segmentLengths.Count; i++)
 		{
-			if (remaining <= _segmentLengths[i])
+			if (remaining <= segmentLengths[i])
 				return Vector2.Normalize(Points[i + 1] - Points[i]);
-			remaining -= _segmentLengths[i];
+			remaining -= segmentLengths[i];
 		}
 		return Vector2.UnitX;
 	}

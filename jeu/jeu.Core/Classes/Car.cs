@@ -10,43 +10,43 @@ public class Car(Track track)
 	private static readonly float FRICTION = 200f;
 
 	private readonly Track _track = track;
-	public float PositionAlongTrack { get; private set; } = 0f;
-	public float Speed { get; private set; } = 0f;
-	public Vector2 Position => _track.GetPositionAtDistance(PositionAlongTrack);
-	public float Rotation { get; private set; }
+	public float positionAlongTrack { get; private set; } = 0f;
+	public float speed { get; private set; } = 0f;
+	public Vector2 position => _track.GetPositionAtDistance(positionAlongTrack);
+	public float rotation { get; private set; }
 
-	public void Update(float dt)
+	public void update(float dt)
 	{
-		PositionAlongTrack += Speed * dt;
+		positionAlongTrack += speed * dt;
 
-		if (PositionAlongTrack <= 0f)
+		if (positionAlongTrack <= 0f)
 		{
-			Speed = 0f;
-			PositionAlongTrack = 0f;
+			speed = 0f;
+			positionAlongTrack = 0f;
 		}
-		else if (PositionAlongTrack >= _track.TotalLength)
+		else if (positionAlongTrack >= _track.getTotalLength)
 		{
-			Speed = 0f;
-			PositionAlongTrack = _track.TotalLength;
+			speed = 0f;
+			positionAlongTrack = _track.getTotalLength;
 		}
 
-		var tangent = _track.GetTangentAtDistance(PositionAlongTrack);
-		Rotation = MathF.Atan2(tangent.Y, tangent.X);
+		var tangent = _track.GetTangentAtDistance(positionAlongTrack);
+		rotation = MathF.Atan2(tangent.Y, tangent.X);
 	}
 
-	public void Accelerate(float dt)
+	public void accelerate(float dt)
 	{
-		Speed = Math.Clamp(Speed + (ACCELERATION * dt), -MAX_SPEED, MAX_SPEED);
+		speed = Math.Clamp(speed + (ACCELERATION * dt), -MAX_SPEED, MAX_SPEED);
 	}
 
-	public void Decelerate(float dt)
+	public void decelerate(float dt)
 	{
-		Speed = Math.Clamp(Speed - (ACCELERATION * dt), -MAX_SPEED, MAX_SPEED);
+		speed = Math.Clamp(speed - (ACCELERATION * dt), -MAX_SPEED, MAX_SPEED);
 	}
 
-	public void ApplyFriction(float dt)
+	public void applyFriction(float dt)
 	{
-		if (Speed > 0) Speed = Math.Max(0, Speed - FRICTION * dt);
-		else if (Speed < 0) Speed = Math.Min(0, Speed + FRICTION * dt);
+		if (speed > 0) speed = Math.Max(0, speed - FRICTION * dt);
+		else if (speed < 0) speed = Math.Min(0, speed + FRICTION * dt);
 	}
 }
