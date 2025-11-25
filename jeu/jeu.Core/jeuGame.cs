@@ -28,31 +28,22 @@ namespace jeu.Core
 			graphics = new GraphicsDeviceManager(this);
 			Content.RootDirectory = "Content";
 			IsMouseVisible = true;
-			track = new Track(
-			[
-				new(100, 100),
-				new(50, 450),
-				new(200, 150),
-				new(700, 100),
-				new(700, 200),
-				new(350, 200),
-				new(300, 300),
-				new(700, 450)
-			], true);
-			car = new Car(track);
 		}
 
 		protected override void LoadContent()
 		{
 			spriteBatch = new SpriteBatch(GraphicsDevice);
+			enemyManager.LoadContent(GraphicsDevice);
+			font = Content.Load<SpriteFont>("Default");
 
 			pixel = new Texture2D(GraphicsDevice, 1, 1);
 			pixel.SetData([Color.White]);
 
-			font = Content.Load<SpriteFont>("Default");
+			Level level = Level.LoadLevel("level1.xml");
+			track = new Track(level.trackPoints.ConvertAll(p => p.ToVector2()));
+			car = new Car(track);
 
-			enemyManager.LoadContent(GraphicsDevice);
-			enemyManager.Add(new HorizontalPatrolEnemy(16f, new Vector2(400, 150), new Vector2(400, 250)));
+			level.enemies.ConvertAll(e => e.ToEnemy()).ForEach(enemyManager.Add);
 		}
 
 		protected override void Update(GameTime gameTime)
