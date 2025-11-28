@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using jeu.Core.Classes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -6,30 +7,62 @@ using Microsoft.Xna.Framework.Input;
 
 namespace jeu.Core
 {
-
+	// Pour gérer sur quel écran on est
+	public enum GameState
+	{
+		MainMenu,
+		LevelSelect,
+		Playing,
+		LevelCompleted,
+		Options
+	}
+	
 	public class JeuGame : Game
 	{
 		// Do not remove this field even if it seems unused
 		private GraphicsDeviceManager graphics;
 		private SpriteBatch spriteBatch;
-
+		
+		private PlayerProfile playerProfile;
+		private SaveManager saveManager;
+		private GameState currentState = GameState.MainMenu;
+		
+		private List<PlayerProfile> playerProfiles = new List<PlayerProfile>();
+		private string inputPseudo;
+		private int selectedLevel = 1;
+		private int currentLevel = 1;
+		
 		public Track track { get; private set; }
 		public Car car { get; private set; }
-		public int passengers { get; private set; } = 5;
+		private float levelTimer = 0f;
+		private int passengers = 5;
 
 		private readonly EnemyManager enemyManager = new();
 
 		Texture2D pixel;
-
 		SpriteFont font;
 
+		private XmlValidator xmlValidator;
+		private XsltTransformer xsltTransformer;
+		
 		public JeuGame()
 		{
 			graphics = new GraphicsDeviceManager(this);
 			Content.RootDirectory = "Content";
-			IsMouseVisible = true;
+			IsMouseVisible = true; 
+			
+			saveManager = new SaveManager();
+			playerProfiles = saveManager.LoadAllProfiles();
+			
+			xmlValidator = new XmlValidator();
+			xsltTransformer = new XsltTransformer();
 		}
 
+		protected override void Initialize()
+		{
+			base.Initialize();
+		}
+		
 		protected override void LoadContent()
 		{
 			spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -69,6 +102,18 @@ namespace jeu.Core
 			}
 
 			enemyManager.Update(gameTime);
+			
+			levelTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+			
+			// Fin si la cabine atteint 100% de progression
+			float progression = car.positionAlongTrack / track.getTotalLength * 100;
+			if (progression >= 100)
+			{
+				saveManager.CompleteLevel(playerProfile, currentLevel, levelTimer, passengers);
+				currentLevel++;
+				levelTimer = 0f;
+				passengers = 5;
+			}
 
 			base.Update(gameTime);
 		}
@@ -142,6 +187,5 @@ namespace jeu.Core
 				0f
 			);
 		}
-
 	}
 }
