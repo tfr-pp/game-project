@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34723.18
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "jeu.Core", "jeu.Core\jeu.Core.csproj", "{47BD21C1-2170-456C-AF98-6D92C5F73BA9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "jeu.Core", "jeu\jeu.Core\jeu.Core.csproj", "{47BD21C1-2170-456C-AF98-6D92C5F73BA9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "jeu.DesktopGL", "jeu.DesktopGL\jeu.DesktopGL.csproj", "{85B968E5-2E46-45A3-AD10-1F3F1FB6F9B6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "jeu.DesktopGL", "jeu\jeu.DesktopGL\jeu.DesktopGL.csproj", "{85B968E5-2E46-45A3-AD10-1F3F1FB6F9B6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "jeu.WindowsDX", "jeu\jeu.WindowsDX\jeu.WindowsDX.csproj", "{0BBBD441-30E0-43E7-B691-EA19A797AA9B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Platforms", "Platforms", "{B4A0E918-51B4-40FF-9845-60F2616B3F27}"
 EndProject
