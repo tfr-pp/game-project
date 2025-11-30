@@ -6,7 +6,7 @@ namespace jeu.Core.Classes;
 public abstract class Enemy(Vector2 startPosition, float speed)
 {
 	public Vector2 Position { get; protected set; } = startPosition;
-	public Rectangle Hitbox => new(
+	public Rectangle hitBox => new(
 		(int)Position.X - 20,
 		(int)Position.Y - 20,
 		40,

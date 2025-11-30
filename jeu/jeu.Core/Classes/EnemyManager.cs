@@ -30,5 +30,7 @@ public class EnemyManager
 			enemy.Draw(spriteBatch, pixel);
 	}
 
+	public void Clear() => _enemies.Clear();
+
 	public IEnumerable<Enemy> GetEnemies() => _enemies;
 }

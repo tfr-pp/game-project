@@ -5,15 +5,15 @@ namespace jeu.Core.Classes;
 
 public class LevelSave
 {
-    [XmlAttribute] public int Id { get; set; }
-    [XmlAttribute] public bool Completed { get; set; }
-    [XmlElement] public float TimeSpent { get; set; } = 0f;       // Temps mis pour finir le niveau
-    [XmlElement] public int PassengersLeft { get; set; } = 0;     // Nombre de passagers restants
+	[XmlAttribute] public int Id { get; set; }
+	[XmlAttribute] public bool Completed { get; set; }
+	[XmlElement] public float TimeSpent { get; set; } = 0f;       // Temps mis pour finir le niveau
+	[XmlElement] public int PassengersLeft { get; set; } = 0;     // Nombre de passagers restants
 }
 
 [XmlRoot("SaveLevels")]
 public class LevelsSave
 {
-    [XmlElement("Level")]
-    public List<LevelSave> Levels { get; set; } = new List<LevelSave>();
+	[XmlElement("Level")]
+	public List<LevelSave> Levels { get; set; } = [];
 }

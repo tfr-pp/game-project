@@ -19,7 +19,7 @@ public class Car(Track track)
 
 	private readonly Vector2 _halfSize = new(25f, 12f);
 
-	public Rectangle hitbox => GetAABB();
+	public Rectangle hitBox => GetAABB();
 
 	public Vector2[] GetRotatedHitboxCorners()
 	{
