@@ -10,9 +10,9 @@ public class SineEnemy(Vector2 startPosition,
 	private readonly float frequency = frequency;
 	private float _time;
 
-	public override void Update(GameTime gameTime)
+	public override void Update(float dt)
 	{
-		_time += (float)gameTime.ElapsedGameTime.TotalSeconds;
+		_time += dt;
 
 		Position = new Vector2(
 			Position.X - Speed,

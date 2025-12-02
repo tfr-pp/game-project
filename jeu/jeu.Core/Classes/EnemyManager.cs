@@ -18,10 +18,10 @@ public class EnemyManager
 		pixel.SetData([Color.White]);
 	}
 
-	public void Update(GameTime gameTime)
+	public void Update(float dt)
 	{
 		foreach (var enemy in _enemies)
-			enemy.Update(gameTime);
+			enemy.Update(dt);
 	}
 
 	public void Draw(SpriteBatch spriteBatch)

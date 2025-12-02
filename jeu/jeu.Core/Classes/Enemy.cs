@@ -15,7 +15,7 @@ public abstract class Enemy(Vector2 startPosition, float speed)
 
 	public float Speed { get; protected set; } = speed;
 
-	public abstract void Update(GameTime gameTime);
+	public abstract void Update(float dt);
 	public virtual void Draw(SpriteBatch spriteBatch, Texture2D pixel)
 	{
 		spriteBatch.Draw(pixel,

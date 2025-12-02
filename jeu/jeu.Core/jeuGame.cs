@@ -25,19 +25,13 @@ namespace jeu.Core
 
 		private PlayerProfile playerProfile;
 		private SaveManager saveManager;
-		private GameState currentState = GameState.MainMenu;
+		private GameState currentState;
 
 		private List<PlayerProfile> playerProfiles = [];
 		private string inputPseudo;
-		private int currentLevel = 1;
 
-		public Track track { get; private set; }
-		public Car car { get; private set; }
-		private float levelTimer = 0f;
+		private GameManager gameManager;
 
-		private readonly EnemyManager enemyManager = new();
-
-		Texture2D pixel;
 		SpriteFont font;
 
 		public JeuGame()
@@ -49,17 +43,22 @@ namespace jeu.Core
 
 		protected override void Initialize()
 		{
+			gameManager = new GameManager((level, time, passengers) =>
+			{
+				saveManager.CompleteLevel(playerProfile, level, time, passengers);
+			});
+
+			currentState = GameState.MainMenu;
+
 			base.Initialize();
 		}
 
 		protected override void LoadContent()
 		{
 			spriteBatch = new SpriteBatch(GraphicsDevice);
-			enemyManager.LoadContent(GraphicsDevice);
 			font = Content.Load<SpriteFont>("Default");
 
-			pixel = new Texture2D(GraphicsDevice, 1, 1);
-			pixel.SetData([Color.White]);
+			gameManager.Load(GraphicsDevice);
 
 			saveManager = new SaveManager();
 
@@ -71,21 +70,8 @@ namespace jeu.Core
 				CreationDate = DateTime.Now
 			};
 
-			LoadLevel(1);
-		}
-
-		protected void LoadLevel(int levelId)
-		{
-			enemyManager.Clear();
-			currentLevel = levelId;
-
-			Level level = Level.LoadLevel($"level{levelId}.xml");
-			track = new Track(level.trackPoints.ConvertAll(p => p.ToVector2()));
-			car = new Car(track);
-
-			level.enemies.ConvertAll(e => e.ToEnemy()).ForEach(enemyManager.Add);
-
-			levelTimer = 0f;
+			gameManager.LoadLevel(1);
+			currentState = GameState.Playing;
 		}
 
 		protected override void Update(GameTime gameTime)
@@ -94,97 +80,27 @@ namespace jeu.Core
 
 			if (k.IsKeyDown(Keys.Escape)) Exit();
 
-			float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-			if (k.IsKeyDown(Keys.Up)) car.Accelerate(dt);
-			else if (k.IsKeyDown(Keys.Down)) car.Decelerate(dt);
-			else car.ApplyFriction(dt);
-
-			car.Update(dt);
-
-			foreach (var enemy in enemyManager.GetEnemies())
+			if (currentState == GameState.Playing)
 			{
-				if (car.hitBox.Intersects(enemy.hitBox))
-				{
-					car.HitEnemy(enemy.Speed);
-				}
+				float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+				if (k.IsKeyDown(Keys.Up)) gameManager.car.Accelerate(dt);
+				else if (k.IsKeyDown(Keys.Down)) gameManager.car.Decelerate(dt);
+				else gameManager.car.ApplyFriction(dt);
+
+				gameManager.Update(dt);
 			}
 
-			enemyManager.Update(gameTime);
-
-			levelTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-			// Fin si la cabine atteint 100% de progression
-			if (car.positionAlongTrack / track.getTotalLength >= 1)
-			{
-				saveManager.CompleteLevel(playerProfile, currentLevel, levelTimer, car.passengers);
-				LoadLevel(currentLevel + 1);
-			}
 
 			base.Update(gameTime);
 		}
 
-		private void DrawTrackLine()
-		{
-			for (int i = 0; i < track.points.Count - 1; i++)
-			{
-				DrawLine(spriteBatch, track.points[i], track.points[i + 1], Color.Gray, 2f);
-			}
-		}
-
-
 		protected override void Draw(GameTime gameTime)
 		{
-			GraphicsDevice.Clear(Color.CornflowerBlue);
-
-
-			spriteBatch.Begin();
-
-			DrawTrackLine();
-
-			spriteBatch.DrawString(
-				font,
-				$"Time: {levelTimer:0.00} s",
-				new(10, 10),
-				Color.Black
-			);
-
-			spriteBatch.DrawString(
-				font,
-				$"Passengers: {car.passengers}",
-				new(10, 30),
-				Color.Black
-			);
-
-			car.Draw(spriteBatch, pixel);
-
-			enemyManager.Draw(spriteBatch);
-
-			spriteBatch.End();
+			gameManager.Draw(GraphicsDevice, spriteBatch, font);
 
 			base.Draw(gameTime);
-		}
-
-		private void DrawLine(SpriteBatch sb, Vector2 start, Vector2 end, Color color, float thickness)
-		{
-			Vector2 edge = end - start;
-			float angle = (float)Math.Atan2(edge.Y, edge.X);
-
-			sb.Draw(
-				pixel,
-				new Rectangle(
-					(int)start.X - 1,
-					(int)start.Y - 1,
-					(int)edge.Length() + 2,
-					(int)thickness
-				),
-				null,
-				color,
-				angle,
-				Vector2.Zero,
-				SpriteEffects.None,
-				0f
-			);
 		}
 	}
 }

@@ -9,12 +9,11 @@ public class HorizontalPatrolEnemy(float speed, Vector2 from, Vector2 to) : Enem
 	private Vector2 _target = to;
 	private const float EPSILON = 0.001f;
 
-	public override void Update(GameTime gameTime)
+	public override void Update(float dt)
 	{
 		if (_from == _to) return;
 
-		float delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
-		float step = Speed * delta;
+		float step = Speed * dt;
 
 		Vector2 toTarget = _target - Position;
 		float dist = toTarget.Length();
