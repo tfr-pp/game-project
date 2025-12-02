@@ -61,7 +61,6 @@ namespace jeu.Core
 			pixel = new Texture2D(GraphicsDevice, 1, 1);
 			pixel.SetData([Color.White]);
 
-
 			saveManager = new SaveManager();
 
 			playerProfiles = saveManager.LoadAllProfiles();

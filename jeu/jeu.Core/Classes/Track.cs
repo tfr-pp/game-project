@@ -10,10 +10,10 @@ public class Track
 	private float totalLength;
 	public float getTotalLength => totalLength;
 
-	public Track(List<Vector2> init_points, bool clean = true)
+	public Track(List<Vector2> init_points)
 	// points where track rail goes and "clean" the curving or not of path
 	{
-		if (clean && init_points.Count >= 4)
+		if (init_points.Count >= 4)
 		{
 			points = [];
 
@@ -38,18 +38,15 @@ public class Track
 		{
 			points = init_points;
 		}
-		Precompute();
-	}
 
-	private void Precompute()
-	{
 		segmentLengths = [];
 		totalLength = 0f;
+
 		for (int i = 0; i < points.Count - 1; i++)
 		{
-			float len = Vector2.Distance(points[i], points[i + 1]);
-			segmentLengths.Add(len);
-			totalLength += len;
+			float segmentLength = Vector2.Distance(points[i], points[i + 1]);
+			segmentLengths.Add(segmentLength);
+			totalLength += segmentLength;
 		}
 	}
 
