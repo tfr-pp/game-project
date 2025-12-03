@@ -1,4 +1,5 @@
 using System;
+using jeu.Core.Classes.Vue;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -35,12 +36,18 @@ public class ScreenManager
 
 	public void Draw(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch)
 	{
+		graphicsDevice.Clear(Color.Black);
 		var pp = graphicsDevice.PresentationParameters;
 		Rectangle bgRect = new(0, 0, pp.BackBufferWidth, pp.BackBufferHeight);
 
 		Texture2D bgTexture = gameScreens[idCurScreen].getBgTexture();
 
 		spriteBatch.Draw(bgTexture, bgRect, Color.White);
+
+		if (currentState == GameState.LevelSelect)
+		{
+			levelMenuScreen.Draw(spriteBatch);
+		}
 	}
 
 }

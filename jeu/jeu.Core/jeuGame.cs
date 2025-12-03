@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using jeu.Core.Classes;
 using jeu.Core.Classes.Controller;
+using jeu.Core.Classes.Model;
+using jeu.Core.Classes.Vue;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -21,7 +23,6 @@ namespace jeu.Core
 
 	public class JeuGame : Game
 	{
-		// Do not remove this field even if it seems unused
 		private GraphicsDeviceManager graphics;
 		private SpriteBatch spriteBatch;
 
@@ -63,7 +64,7 @@ namespace jeu.Core
 			});
 			currentState = GameState.MainMenu;
 			startScreen = new StartScreen();
-			levelMenuScreen = new LevelMenuScreen();
+			levelMenuScreen = new LevelMenuScreen(font, [], null, null);
 			/*
 						highScoresScreen = new HighScoresScreen();
 						optionsMenuScreen = new OptionsMenuScreen();
@@ -81,11 +82,10 @@ namespace jeu.Core
 			bgLevelTexture = Content.Load<Texture2D>("Sprites/LevelBG");
 			ennemySprite = Content.Load<Texture2D>("Sprites/Ennemy");
 			pixel = new Texture2D(GraphicsDevice, 1, 1);
-			pixel.SetData(new[] { Color.White });
+			pixel.SetData([Color.White]);
 
 			gameManager.Load(GraphicsDevice, carTexture, bgLevelTexture, ennemySprite, pixel);
 			startScreen.LoadContent(bgTexture);
-			levelMenuScreen.LoadContent(bgLevelTexture);
 
 			saveManager = new SaveManager();
 
@@ -97,7 +97,6 @@ namespace jeu.Core
 				CreationDate = DateTime.Now
 			};
 
-			//gameManager.LoadNextLevel();
 			currentState = GameState.MainMenu;
 		}
 
@@ -118,13 +117,18 @@ namespace jeu.Core
 
 				gameManager.Update(dt);
 			}
-
-			if (currentState == GameState.MainMenu)
+			else if (currentState == GameState.MainMenu)
 			{
 				//+ gerer à la souris si possible
-				if (k.IsKeyDown(Keys.Down)) startScreen.menuDown();
-				if (k.IsKeyDown(Keys.Up)) startScreen.menuUp();
 				if (Array.Find(k.GetPressedKeys(), OKPressed) != Keys.None) startScreen.selectOpt(this);
+			}
+			else if (currentState == GameState.LevelSelect)
+			{
+				//+ gerer à la souris si possible
+				if (k.IsKeyDown(Keys.Down)) levelMenuScreen.KeyPressed(Keys.Down);
+				if (k.IsKeyDown(Keys.Up)) levelMenuScreen.KeyPressed(Keys.Up);
+				if (Array.Find(k.GetPressedKeys(), OKPressed) != Keys.None) levelMenuScreen.KeyPressed(Keys.Enter);
+				if (Array.Find(k.GetPressedKeys(), NOKPressed) != Keys.None) levelMenuScreen.KeyPressed(Keys.Escape);
 			}
 
 
@@ -136,6 +140,20 @@ namespace jeu.Core
 			if (state == GameState.Playing)
 			{
 				gameManager.LoadNextLevel();
+			}
+			else if (state == GameState.LevelSelect)
+			{
+				var levelIds = gameManager.levels.LevelEntries.ConvertAll(entry => entry.Id);
+				levelMenuScreen = new LevelMenuScreen(font, levelIds, (levelId) =>
+				{
+					gameManager.LoadLevel(levelId);
+					setState(GameState.Playing);
+				}, () =>
+				{
+					setState(GameState.MainMenu);
+				});
+				levelMenuScreen.bgTexture = bgTexture;
+				screenManager = new ScreenManager(state, startScreen, levelMenuScreen);
 			}
 			currentState = state;
 		}
@@ -161,7 +179,7 @@ namespace jeu.Core
 			{
 				gameManager.Draw(GraphicsDevice, spriteBatch, font);
 			}
-			else if (currentState == GameState.MainMenu)
+			else if (currentState == GameState.MainMenu || currentState == GameState.LevelSelect)
 			{
 				screenManager.Draw(GraphicsDevice, spriteBatch);
 			}

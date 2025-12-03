@@ -24,7 +24,7 @@ public class GameManager
 	private Texture2D carTexture;
 	private Texture2D bgLevelTexture;
 
-	private Levels levels;
+	public Levels levels { get; private set; }
 
 	public GameManager(Action<string, float, int> onLevelCompleted)
 	{
@@ -114,9 +114,7 @@ public class GameManager
 
 	public void Draw(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, SpriteFont font)
 	{
-		graphicsDevice.Clear(Color.CornflowerBlue);
-		Rectangle bgRect = new(0, 0, graphicsDevice.PresentationParameters.BackBufferWidth,
-			graphicsDevice.PresentationParameters.BackBufferHeight);
+		graphicsDevice.Clear(Color.Black);
 		spriteBatch.Draw(bgLevelTexture, new Vector2(0, 0), Color.White);
 
 		DrawTrackLine(spriteBatch);
