@@ -57,5 +57,10 @@ public class ScreenManager
 		spriteBatch.Draw(bgTexture, bgRect, Microsoft.Xna.Framework.Color.White);
 		spriteBatch.End();
 	}
+	
+	public void setState(GameState state)
+	{
+		currentState = state;
+	}
 
 }

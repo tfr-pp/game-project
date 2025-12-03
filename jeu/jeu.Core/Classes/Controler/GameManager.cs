@@ -40,6 +40,11 @@ public class GameManager
 		levels = Levels.LoadLevels();
 	}
 
+	public void LoadFirstLevel(int level)
+	{
+		if (level < 4 && level >= 0) {currentLevelIndex = level;}
+		LoadNextLevel();
+	}
 	public void LoadNextLevel()
 	{
 		enemyManager.Clear();

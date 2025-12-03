@@ -30,7 +30,7 @@ namespace jeu.Core
 
 		private List<PlayerProfile> playerProfiles = [];
 
-		private GameManager gameManager;
+		public GameManager gameManager;
 
 		private SpriteFont font;
 		private Texture2D carTexture;
@@ -123,6 +123,13 @@ namespace jeu.Core
 				if (Array.Find(k.GetPressedKeys(),OKPressed) != Keys.None) startScreen.selectOpt(this);
 			}
 
+			if (currentState == GameState.LevelSelect)
+			{
+				if (k.IsKeyDown(Keys.Down)) levelMenuScreen.menuDown();
+				if (k.IsKeyDown(Keys.Up)) levelMenuScreen.menuUp();
+				if (Array.Find(k.GetPressedKeys(),OKPressed) != Keys.None) levelMenuScreen.selectOpt(this);
+			}
+
 
 			base.Update(gameTime);
 		}
@@ -148,7 +155,6 @@ namespace jeu.Core
 
 		protected override void Draw(GameTime gameTime)
 		{
-			gameManager.Draw(GraphicsDevice, spriteBatch, font);
 			if (currentState == GameState.Playing)
 			{
 				
@@ -156,8 +162,17 @@ namespace jeu.Core
 
 			if (currentState == GameState.MainMenu)
 			{
+				
 				screenManager.Draw(GraphicsDevice, spriteBatch);
 			}
+
+			if (currentState == GameState.LevelSelect)
+			{
+				screenManager.Draw(GraphicsDevice, spriteBatch);
+			}
+			
+			screenManager.setState(currentState);
+
 			base.Draw(gameTime);
 		}
 	}

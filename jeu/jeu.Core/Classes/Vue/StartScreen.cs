@@ -37,8 +37,7 @@ public class StartScreen : Screen
     
     public void selectOpt(JeuGame game)
     {
-        //OPTION: LANCER LE JEU (DEFAUT)
-        game.setState(GameState.Playing);
+        game.setState(GameState.LevelSelect);
     }
     
     public void unselectOpt()
