@@ -8,8 +8,8 @@ namespace jeu.Core.Classes;
 [XmlRoot("Levels")]
 public class Levels
 {
-	[XmlElement("Path")]
-	public List<PathEntry> Paths { get; private set; } = [];
+	[XmlElement("Level")]
+	public List<LevelEntry> LevelEntries = [];
 
 	public static Levels LoadLevels()
 	{
@@ -21,12 +21,23 @@ public class Levels
 
 	public Level GetLevel(int index)
 	{
-		return Level.LoadLevel(Path.Combine(AppContext.BaseDirectory, "Content", "Levels", Paths[index].Value));
+		return Level.LoadLevel(LevelEntries[index].Path);
+	}
+
+	public Level GetLevel(string id)
+	{
+		return Level.LoadLevel(LevelEntries.Find(entry => entry.Id == id).Path);
 	}
 }
 
-public class PathEntry
+public class LevelEntry
 {
-	[XmlAttribute("value")]
-	public string Value;
+	[XmlAttribute("path")]
+	public string Path { get; set; }
+
+	[XmlAttribute("id")]
+	public string Id { get; set; }
+
+	[XmlAttribute("name")]
+	public string Name { get; set; }
 }
