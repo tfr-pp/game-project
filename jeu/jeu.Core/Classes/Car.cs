@@ -124,15 +124,23 @@ public class Car(Track track)
 		ClampPositionAlongTrack();
 	}
 
-	public void Draw(SpriteBatch spriteBatch, Texture2D pixel)
+	public void Draw(SpriteBatch spriteBatch, Texture2D carTexture)
 	{
-		spriteBatch.Draw(pixel,
+		if (carTexture == null) return;
+
+		var origin = new Vector2(carTexture.Width / 2f, carTexture.Height / 2f);
+
+		var scaleX = _halfSize.X * 2f / carTexture.Width;
+		var scaleY = _halfSize.Y * 2f / carTexture.Height;
+		var scale = new Vector2(scaleX, scaleY);
+
+		spriteBatch.Draw(carTexture,
 			position: position,
 			sourceRectangle: null,
-			color: Color.Green,
-			rotation: rotation,
-			origin: new Vector2(0.5f, 0.5f),
-			scale: new Vector2(40, 40),
+			color: Color.White,
+			rotation: rotation + MathF.PI,
+			origin: origin,
+			scale: scale,
 			effects: SpriteEffects.None,
 			layerDepth: 0f);
 	}

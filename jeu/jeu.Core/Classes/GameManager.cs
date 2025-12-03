@@ -19,6 +19,7 @@ public class GameManager
 	public event Action<string, float, int> OnLevelCompleted;
 
 	private Texture2D pixel;
+	private Texture2D carTexture;
 
 	private Levels levels;
 
@@ -26,10 +27,10 @@ public class GameManager
 	{
 		OnLevelCompleted = onLevelCompleted;
 	}
-
-	public void Load(GraphicsDevice graphicsDevice)
+	public void Load(GraphicsDevice graphicsDevice, Texture2D carTexture)
 	{
 		enemyManager.LoadContent(graphicsDevice);
+		this.carTexture = carTexture;
 
 		pixel = new Texture2D(graphicsDevice, 1, 1);
 		pixel.SetData([Color.White]);
@@ -111,7 +112,7 @@ public class GameManager
 			Color.Black
 		);
 
-		car.Draw(spriteBatch, pixel);
+		car.Draw(spriteBatch, carTexture);
 
 		enemyManager.Draw(spriteBatch);
 

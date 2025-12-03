@@ -31,7 +31,8 @@ namespace jeu.Core
 
 		private GameManager gameManager;
 
-		SpriteFont font;
+		private SpriteFont font;
+		private Texture2D carTexture;
 
 		public JeuGame()
 		{
@@ -56,8 +57,9 @@ namespace jeu.Core
 		{
 			spriteBatch = new SpriteBatch(GraphicsDevice);
 			font = Content.Load<SpriteFont>("Default");
+			carTexture = Content.Load<Texture2D>("Sprites/Car");
 
-			gameManager.Load(GraphicsDevice);
+			gameManager.Load(GraphicsDevice, carTexture);
 
 			saveManager = new SaveManager();
 
