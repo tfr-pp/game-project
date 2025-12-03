@@ -42,9 +42,9 @@ namespace jeu.Core
 
 		protected override void Initialize()
 		{
-			gameManager = new GameManager((level, time, passengers) =>
+			gameManager = new GameManager((level, time, lives) =>
 			{
-				saveManager.CompleteLevel(playerProfile, level, time, passengers);
+				saveManager.CompleteLevel(playerProfile, level, time, lives);
 			});
 
 			currentState = GameState.MainMenu;

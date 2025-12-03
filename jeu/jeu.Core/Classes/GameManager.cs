@@ -83,7 +83,7 @@ public class GameManager
 		// Fin si la cabine atteint 100% de progression
 		if (car.positionAlongTrack / track.getTotalLength >= 1)
 		{
-			OnLevelCompleted.Invoke(currentLevel.id, levelTimer, car.passengers);
+			OnLevelCompleted.Invoke(currentLevel.id, levelTimer, car.lives);
 
 			LoadNextLevel();
 		}
@@ -106,7 +106,7 @@ public class GameManager
 
 		spriteBatch.DrawString(
 			font,
-			$"Passengers: {car.passengers}",
+			$"Lives: {car.lives}",
 			new(10, 30),
 			Color.Black
 		);

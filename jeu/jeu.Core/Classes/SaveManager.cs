@@ -50,7 +50,7 @@ public class SaveManager
 	}
 
 	// Complète un niveau et met à jour temps + passagers
-	public void CompleteLevel(PlayerProfile profile, string levelId, float timeSpent, int passengersLeft)
+	public void CompleteLevel(PlayerProfile profile, string levelId, float timeSpent, int livesLeft)
 	{
 		LevelSave level = profile.Levels.Levels.Find(l => l.Id == levelId);
 		if (level == null)
@@ -60,7 +60,7 @@ public class SaveManager
 				Id = levelId,
 				Completed = true,
 				TimeSpent = timeSpent,
-				PassengersLeft = passengersLeft
+				LivesLeft = livesLeft
 			};
 			profile.Levels.Levels.Add(level);
 		}
@@ -68,7 +68,7 @@ public class SaveManager
 		{
 			level.Completed = true;
 			level.TimeSpent = timeSpent;
-			level.PassengersLeft = passengersLeft;
+			level.LivesLeft = livesLeft;
 		}
 
 		SaveProfile(profile);

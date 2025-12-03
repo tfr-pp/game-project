@@ -16,7 +16,7 @@ public class Car(Track track)
 	public float speed { get; private set; } = 0f;
 	public Vector2 position => track.GetPositionAtDistance(positionAlongTrack);
 	public float rotation { get; private set; }
-	public int passengers { get; private set; } = 5;
+	public int lives { get; private set; } = 5;
 
 	private readonly Vector2 _halfSize = new(25f, 12f);
 
@@ -109,7 +109,7 @@ public class Car(Track track)
 
 	public void HitEnemy(float enemySpeed)
 	{
-		passengers = Math.Max(0, passengers - 1);
+		lives = Math.Max(0, lives - 1);
 
 		var relative = enemySpeed - speed;
 
