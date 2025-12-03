@@ -6,9 +6,10 @@ namespace jeu.Core.Classes;
 
 public class Car(Track track)
 {
-	private static readonly float MAX_SPEED = 800f;
-	private static readonly float ACCELERATION = 400f;
-	private static readonly float FRICTION = 200f;
+	private static readonly float MAX_SPEED = 400f;
+	private static readonly float ACCELERATION = 500f;
+	private static readonly float FRICTION = 60f;
+	private static readonly float GRAVITY_ACCEL = 150f;
 
 	private readonly Track track = track;
 	public float positionAlongTrack { get; private set; } = 0f;
@@ -77,12 +78,17 @@ public class Car(Track track)
 
 	public void Update(float dt)
 	{
+		ApplyGravity(dt);
+
 		positionAlongTrack += speed * dt;
 
 		ClampPositionAlongTrack();
 
 		var tangent = track.GetTangentAtDistance(positionAlongTrack);
 		rotation = MathF.Atan2(tangent.Y, tangent.X);
+
+		// Dead zone for very low speeds
+		if (speed > -0.5f && speed < 0.5f) speed = 0f;
 	}
 
 	public void Accelerate(float dt)
@@ -129,5 +135,13 @@ public class Car(Track track)
 			scale: new Vector2(40, 40),
 			effects: SpriteEffects.None,
 			layerDepth: 0f);
+	}
+
+	public void ApplyGravity(float dt)
+	{
+		var tangent = track.GetTangentAtDistance(positionAlongTrack);
+		var gravityDir = new Vector2(0f, 1f);
+		var accelAlongTangent = Vector2.Dot(gravityDir, tangent) * GRAVITY_ACCEL;
+		speed = Math.Clamp(speed + accelAlongTangent * dt, -MAX_SPEED, MAX_SPEED);
 	}
 }
