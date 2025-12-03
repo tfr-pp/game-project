@@ -1,11 +1,10 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
+using jeu.Core.Classes.Model;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace jeu.Core.Classes;
+namespace jeu.Core.Classes.Controller;
 
 public class GameManager
 {
@@ -27,53 +26,19 @@ public class GameManager
 
 	private Levels levels;
 
-	public MenuManager menuManager;
-	private SpriteBatch spriteBatch;
-
 	public GameManager(Action<string, float, int> onLevelCompleted)
 	{
 		OnLevelCompleted = onLevelCompleted;
 	}
-<<<<<<< Updated upstream:jeu/jeu.Core/Classes/Controler/GameManager.cs
-	public void Load(GraphicsDevice graphicsDevice, Texture2D carTexture, Texture2D bgLevelTexture, Texture2D ennemySprite)
-=======
-	public void Load(GraphicsDevice graphicsDevice, Texture2D carTexture, ContentManager content)
->>>>>>> Stashed changes:jeu/jeu.Core/Classes/GameManager.cs
+	public void Load(GraphicsDevice graphicsDevice, Texture2D carTexture, Texture2D bgLevelTexture, Texture2D ennemySprite, Texture2D pixel)
 	{
-		enemyManager.LoadContent(graphicsDevice,ennemySprite);
+		enemyManager.LoadContent(graphicsDevice, ennemySprite);
 		this.carTexture = carTexture;
-<<<<<<< Updated upstream:jeu/jeu.Core/Classes/Controler/GameManager.cs
 		this.bgLevelTexture = bgLevelTexture;
-=======
-		menuManager = new MenuManager();
-		spriteBatch = new SpriteBatch(graphicsDevice);
-		menuManager.LoadContent(content, spriteBatch);
->>>>>>> Stashed changes:jeu/jeu.Core/Classes/GameManager.cs
 
-		pixel = new Texture2D(graphicsDevice, 1, 1);
-		pixel.SetData([Color.White]);
+		this.pixel = pixel;
 
 		levels = Levels.LoadLevels();
-
-		menuManager.ShowMainMenu(result =>
-				{
-					switch (result)
-					{
-						case MenuResult.Play:
-							break;
-						case MenuResult.OpenLevelSelect:
-							List<string> levelNames = levels.LevelEntries.ConvertAll(entry => entry.Name);
-							menuManager.ShowLevelSelect(levelNames, selected =>
-							{
-								LoadLevel(levels.LevelEntries.Find(entry => entry.Name == selected).Id);
-							},
-							onBack: () => menuManager.ShowMainMenu(_ => { }));
-							break;
-						case MenuResult.Exit:
-							break;
-					}
-				});
-
 	}
 
 	public void LoadLevel(string levelId)
@@ -149,23 +114,11 @@ public class GameManager
 
 	public void Draw(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, SpriteFont font)
 	{
-<<<<<<< Updated upstream:jeu/jeu.Core/Classes/Controler/GameManager.cs
-=======
-
-		if (menuManager != null && menuManager.IsActive)
-		{
-			menuManager.Draw();
-			return;
-		}
-
 		graphicsDevice.Clear(Color.CornflowerBlue);
->>>>>>> Stashed changes:jeu/jeu.Core/Classes/GameManager.cs
-
-		spriteBatch.Begin();
-		Microsoft.Xna.Framework.Rectangle bgRect = new Microsoft.Xna.Framework.Rectangle(0, 0, graphicsDevice.PresentationParameters.BackBufferWidth,
+		Rectangle bgRect = new(0, 0, graphicsDevice.PresentationParameters.BackBufferWidth,
 			graphicsDevice.PresentationParameters.BackBufferHeight);
-		spriteBatch.Draw(bgLevelTexture, bgRect, Microsoft.Xna.Framework.Color.White);
-		
+		spriteBatch.Draw(bgLevelTexture, new Vector2(0, 0), Color.White);
+
 		DrawTrackLine(spriteBatch);
 
 		spriteBatch.DrawString(
@@ -185,8 +138,6 @@ public class GameManager
 		car.Draw(spriteBatch, carTexture);
 
 		enemyManager.Draw(spriteBatch);
-
-		spriteBatch.End();
 	}
 
 	private void DrawTrackLine(SpriteBatch spriteBatch)

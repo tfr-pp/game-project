@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 
-namespace jeu.Core.Classes;
+namespace jeu.Core.Classes.Model;
 
 public class CircleEnemy(Vector2 startPosition,
 					 float speed, float amplitude) : Enemy(startPosition, speed)

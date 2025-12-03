@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using jeu.Core.Classes;
+using jeu.Core.Classes.Controller;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -45,6 +46,7 @@ namespace jeu.Core
 			private OptionsMenuScreen optionsMenuScreen;
 		*/
 		private ScreenManager screenManager;
+		private Texture2D pixel;
 
 		public JeuGame()
 		{
@@ -78,8 +80,10 @@ namespace jeu.Core
 			bgTexture = Content.Load<Texture2D>("Sprites/BG");
 			bgLevelTexture = Content.Load<Texture2D>("Sprites/LevelBG");
 			ennemySprite = Content.Load<Texture2D>("Sprites/Ennemy");
+			pixel = new Texture2D(GraphicsDevice, 1, 1);
+			pixel.SetData(new[] { Color.White });
 
-			gameManager.Load(GraphicsDevice, carTexture, bgLevelTexture, ennemySprite);
+			gameManager.Load(GraphicsDevice, carTexture, bgLevelTexture, ennemySprite, pixel);
 			startScreen.LoadContent(bgTexture);
 			levelMenuScreen.LoadContent(bgLevelTexture);
 
@@ -94,7 +98,7 @@ namespace jeu.Core
 			};
 
 			//gameManager.LoadNextLevel();
-			//currentState = GameState.Playing;
+			currentState = GameState.MainMenu;
 		}
 
 		protected override void Update(GameTime gameTime)
@@ -114,13 +118,6 @@ namespace jeu.Core
 
 				gameManager.Update(dt);
 			}
-			else if (gameManager.menuManager != null && gameManager.menuManager.IsActive)
-			{
-				foreach (var key in k.GetPressedKeys())
-				{
-					gameManager.menuManager.activeMenu.KeyPressed(key);
-				}
-			}
 
 			if (currentState == GameState.MainMenu)
 			{
@@ -136,6 +133,10 @@ namespace jeu.Core
 
 		public void setState(GameState state)
 		{
+			if (state == GameState.Playing)
+			{
+				gameManager.LoadNextLevel();
+			}
 			currentState = state;
 		}
 
@@ -155,16 +156,17 @@ namespace jeu.Core
 
 		protected override void Draw(GameTime gameTime)
 		{
-			gameManager.Draw(GraphicsDevice, spriteBatch, font);
+			spriteBatch.Begin();
 			if (currentState == GameState.Playing)
 			{
-
+				gameManager.Draw(GraphicsDevice, spriteBatch, font);
 			}
-
-			if (currentState == GameState.MainMenu)
+			else if (currentState == GameState.MainMenu)
 			{
 				screenManager.Draw(GraphicsDevice, spriteBatch);
 			}
+
+			spriteBatch.End();
 			base.Draw(gameTime);
 		}
 	}

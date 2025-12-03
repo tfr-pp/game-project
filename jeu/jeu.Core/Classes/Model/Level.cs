@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
 
-namespace jeu.Core.Classes;
+namespace jeu.Core.Classes.Model;
 
 [XmlRoot("Level")]
 public class Level

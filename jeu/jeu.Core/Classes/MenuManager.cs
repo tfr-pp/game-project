@@ -33,9 +33,7 @@ namespace jeu.Core.Classes
 		public void Draw()
 		{
 			if (activeMenu == null) return;
-			spriteBatch.Begin();
 			activeMenu.Draw(spriteBatch);
-			spriteBatch.End();
 		}
 
 		public bool IsActive => activeMenu != null;

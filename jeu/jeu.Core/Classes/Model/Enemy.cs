@@ -1,7 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace jeu.Core.Classes;
+namespace jeu.Core.Classes.Model;
 
 public abstract class Enemy(Vector2 startPosition, float speed)
 {
@@ -24,7 +24,7 @@ public abstract class Enemy(Vector2 startPosition, float speed)
 		var scaleX = _halfSize.X * 2f / ennemySprite.Width;
 		var scaleY = _halfSize.Y * 2f / ennemySprite.Height;
 		var scale = new Vector2(scaleX, scaleY);
-		
+
 		spriteBatch.Draw(ennemySprite,
 			position: Position,
 			sourceRectangle: null,
