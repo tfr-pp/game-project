@@ -1,4 +1,6 @@
 <Level>
+	<Id>1</Id>
+	<Name>Level 1</Name>
 	<Track>
 		<Point X="100" Y="100" />
 		<Point X="50" Y="200" />

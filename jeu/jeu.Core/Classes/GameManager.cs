@@ -1,13 +1,14 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 namespace jeu.Core.Classes;
 
 public class GameManager
 {
-	private int currentLevel = 1;
+	public Level currentLevel { get; private set; } = null;
+
+	private int currentLevelIndex = -1;
 
 	public Track track { get; private set; }
 	public Car car { get; private set; }
@@ -15,11 +16,13 @@ public class GameManager
 
 	private readonly EnemyManager enemyManager = new();
 
-	public event Action<int, float, int> OnLevelCompleted;
+	public event Action<string, float, int> OnLevelCompleted;
 
-	Texture2D pixel;
+	private Texture2D pixel;
 
-	public GameManager(Action<int, float, int> onLevelCompleted)
+	private Levels levels;
+
+	public GameManager(Action<string, float, int> onLevelCompleted)
 	{
 		OnLevelCompleted = onLevelCompleted;
 	}
@@ -30,19 +33,34 @@ public class GameManager
 
 		pixel = new Texture2D(graphicsDevice, 1, 1);
 		pixel.SetData([Color.White]);
+
+		levels = Levels.LoadLevels();
 	}
 
-	public void LoadLevel(int levelId)
+	public void LoadNextLevel()
 	{
 		enemyManager.Clear();
-		currentLevel = levelId;
+		currentLevelIndex++;
 
-		Level level = Level.LoadLevel($"level{levelId}.xml");
-		track = new Track(level.trackPoints.ConvertAll(p => p.ToVector2()));
+		if (currentLevelIndex < 0)
+		{
+			currentLevelIndex = 0;
+			currentLevel = levels.GetLevel(currentLevelIndex);
+		}
+		else if (currentLevelIndex == levels.Paths.Count)
+		{
+			currentLevelIndex = 0;
+			currentLevel = levels.GetLevel(currentLevelIndex);
+		}
+		else
+		{
+			currentLevel = levels.GetLevel(currentLevelIndex);
+		}
+
+		track = new Track(currentLevel.trackPoints.ConvertAll(p => p.ToVector2()));
 		car = new Car(track);
 
-		level.enemies.ConvertAll(e => e.ToEnemy()).ForEach(enemyManager.Add);
-
+		currentLevel.enemies.ConvertAll(e => e.ToEnemy()).ForEach(enemyManager.Add);
 		levelTimer = 0f;
 	}
 
@@ -65,9 +83,9 @@ public class GameManager
 		// Fin si la cabine atteint 100% de progression
 		if (car.positionAlongTrack / track.getTotalLength >= 1)
 		{
-			OnLevelCompleted.Invoke(currentLevel, levelTimer, car.passengers);
+			OnLevelCompleted.Invoke(currentLevel.id, levelTimer, car.passengers);
 
-			LoadLevel(currentLevel + 1);
+			LoadNextLevel();
 		}
 	}
 

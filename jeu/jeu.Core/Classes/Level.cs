@@ -10,12 +10,18 @@ public class Level
 {
 	[XmlArray("Track")]
 	[XmlArrayItem("Point")]
-	public List<Point> trackPoints { get; set; }
+	public List<Point> trackPoints;
+
+	[XmlElement("Name")]
+	public string name;
+
+	[XmlElement("Id")]
+	public string id;
 
 	[XmlArray("Enemies")]
 	[XmlArrayItem("HorizontalPatrolEnemy", typeof(HorizontalPatrolEnemyData))]
 	[XmlArrayItem("SineEnemy", typeof(SineEnemyData))]
-	public List<EnemyData> enemies { get; set; }
+	public List<EnemyData> enemies;
 
 	public static Level LoadLevel(string path)
 	{

@@ -50,7 +50,7 @@ public class SaveManager
 	}
 
 	// Complète un niveau et met à jour temps + passagers
-	public void CompleteLevel(PlayerProfile profile, int levelId, float timeSpent, int passengersLeft)
+	public void CompleteLevel(PlayerProfile profile, string levelId, float timeSpent, int passengersLeft)
 	{
 		LevelSave level = profile.Levels.Levels.Find(l => l.Id == levelId);
 		if (level == null)
@@ -72,15 +72,6 @@ public class SaveManager
 		}
 
 		SaveProfile(profile);
-	}
-
-	public static bool IsLevelUnlocked(PlayerProfile profile, int levelId)
-	{
-		if (levelId == 1)
-			return true; // Pour que le premier soit toujours dispo
-
-		LevelSave prev = profile.Levels.Levels.Find(l => l.Id == levelId - 1);
-		return prev != null && prev.Completed;
 	}
 
 	// Liste tous les profils existants

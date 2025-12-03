@@ -28,7 +28,6 @@ namespace jeu.Core
 		private GameState currentState;
 
 		private List<PlayerProfile> playerProfiles = [];
-		private string inputPseudo;
 
 		private GameManager gameManager;
 
@@ -70,7 +69,7 @@ namespace jeu.Core
 				CreationDate = DateTime.Now
 			};
 
-			gameManager.LoadLevel(1);
+			gameManager.LoadNextLevel();
 			currentState = GameState.Playing;
 		}
 
