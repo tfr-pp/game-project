@@ -15,6 +15,7 @@
 		<Point X="700" Y="450" />
 	</Track>
 	<Enemies>
-		<HorizontalPatrolEnemy Speed="16" StartX="400" StartY="150" EndX="400" EndY="250" />
+		<CircleEnemy Speed="50" StartX="100" StartY="250" Amplitude="80" />
+		<HorizontalPatrolEnemy Speed="40" StartX="400" StartY="150" EndX="400" EndY="400" />
 	</Enemies>
 </Level>

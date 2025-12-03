@@ -3,20 +3,21 @@ using Microsoft.Xna.Framework;
 
 namespace jeu.Core.Classes;
 
-public class SineEnemy(Vector2 startPosition,
-					 float speed, float amplitude, float frequency) : Enemy(startPosition, speed)
+public class CircleEnemy(Vector2 startPosition,
+					 float speed, float amplitude) : Enemy(startPosition, speed)
 {
-	private readonly float amplitude = amplitude;
-	private readonly float frequency = frequency;
-	private float _time;
+	private readonly float radius = amplitude;
+	private float _angle;
+	private readonly float _baseX = startPosition.X;
+	private readonly float _baseY = startPosition.Y;
 
 	public override void Update(float dt)
 	{
-		_time += dt;
+		_angle += Speed * dt / radius;
 
 		Position = new Vector2(
-			Position.X - Speed,
-			Position.Y + (float)Math.Sin(_time * frequency) * amplitude
+			_baseX + (float)Math.Cos(_angle) * radius,
+			_baseY + (float)Math.Sin(_angle) * radius
 		);
 	}
 }

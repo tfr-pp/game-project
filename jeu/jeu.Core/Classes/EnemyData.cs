@@ -28,18 +28,17 @@ public class HorizontalPatrolEnemyData : EnemyData
 	}
 }
 
-public class SineEnemyData : EnemyData
+public class CircleEnemyData : EnemyData
 {
 	[XmlAttribute] public float Amplitude { get; set; }
 	[XmlAttribute] public float Frequency { get; set; }
 
-	public override SineEnemy ToEnemy()
+	public override CircleEnemy ToEnemy()
 	{
-		return new SineEnemy(
+		return new CircleEnemy(
 			new(StartX, StartY),
 			Speed,
-			Amplitude,
-			Frequency
+			Amplitude
 		);
 	}
 }

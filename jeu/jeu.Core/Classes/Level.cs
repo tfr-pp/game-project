@@ -20,7 +20,7 @@ public class Level
 
 	[XmlArray("Enemies")]
 	[XmlArrayItem("HorizontalPatrolEnemy", typeof(HorizontalPatrolEnemyData))]
-	[XmlArrayItem("SineEnemy", typeof(SineEnemyData))]
+	[XmlArrayItem("CircleEnemy", typeof(CircleEnemyData))]
 	public List<EnemyData> enemies;
 
 	public static Level LoadLevel(string path)
