@@ -14,6 +14,7 @@ namespace jeu.Core
 		LevelSelect,
 		Playing,
 		LevelCompleted,
+		HighScores,
 		Options
 	}
 
@@ -33,6 +34,17 @@ namespace jeu.Core
 
 		private SpriteFont font;
 		private Texture2D carTexture;
+		private Texture2D bgTexture;
+		private Texture2D bgLevelTexture;
+		private Texture2D ennemySprite;
+		
+		private StartScreen startScreen;
+		private LevelMenuScreen levelMenuScreen;
+	/*
+		private HighScoresScreen highScoresScreen;
+		private OptionsMenuScreen optionsMenuScreen;
+	*/
+		private ScreenManager screenManager;
 
 		public JeuGame()
 		{
@@ -47,9 +59,14 @@ namespace jeu.Core
 			{
 				saveManager.CompleteLevel(playerProfile, level, time, lives);
 			});
-
 			currentState = GameState.MainMenu;
-
+			startScreen = new StartScreen();
+			levelMenuScreen = new LevelMenuScreen();
+/*
+			highScoresScreen = new HighScoresScreen();
+			optionsMenuScreen = new OptionsMenuScreen();
+*/
+			screenManager = new ScreenManager(currentState,startScreen,levelMenuScreen);
 			base.Initialize();
 		}
 
@@ -58,9 +75,14 @@ namespace jeu.Core
 			spriteBatch = new SpriteBatch(GraphicsDevice);
 			font = Content.Load<SpriteFont>("Default");
 			carTexture = Content.Load<Texture2D>("Sprites/Car");
+			bgTexture = Content.Load<Texture2D>("Sprites/BG");
+			bgLevelTexture = Content.Load<Texture2D>("Sprites/LevelBG");
+			ennemySprite = Content.Load<Texture2D>("Sprites/Ennemy");
 
-			gameManager.Load(GraphicsDevice, carTexture);
-
+			gameManager.Load(GraphicsDevice, carTexture, bgLevelTexture,ennemySprite);
+			startScreen.LoadContent(bgTexture);
+			levelMenuScreen.LoadContent(bgLevelTexture);
+			
 			saveManager = new SaveManager();
 
 			playerProfiles = saveManager.LoadAllProfiles();
@@ -72,7 +94,7 @@ namespace jeu.Core
 			};
 
 			gameManager.LoadNextLevel();
-			currentState = GameState.Playing;
+			//currentState = GameState.Playing;
 		}
 
 		protected override void Update(GameTime gameTime)
@@ -93,14 +115,49 @@ namespace jeu.Core
 				gameManager.Update(dt);
 			}
 
+			if (currentState == GameState.MainMenu)
+			{
+				//+ gerer à la souris si possible
+				if (k.IsKeyDown(Keys.Down)) startScreen.menuDown();
+				if (k.IsKeyDown(Keys.Up)) startScreen.menuUp();
+				if (Array.Find(k.GetPressedKeys(),OKPressed) != Keys.None) startScreen.selectOpt(this);
+			}
+
 
 			base.Update(gameTime);
+		}
+
+		public void setState(GameState state)
+		{
+			currentState = state;
+		}
+
+		public static bool OKPressed(Keys key) //voir controlleur souris/clavier
+		{
+			return key.Equals(Keys.Enter) == true || 
+			       key.Equals(Keys.Space) == true ||
+			       key.Equals(Keys.A) == true;
+		}
+		
+		public static bool NOKPressed(Keys key)
+		{
+			return key.Equals(Keys.Back) == true || 
+			       key.Equals(Keys.Delete) == true ||
+			       key.Equals(Keys.Z) == true;
 		}
 
 		protected override void Draw(GameTime gameTime)
 		{
 			gameManager.Draw(GraphicsDevice, spriteBatch, font);
+			if (currentState == GameState.Playing)
+			{
+				
+			}
 
+			if (currentState == GameState.MainMenu)
+			{
+				screenManager.Draw(GraphicsDevice, spriteBatch);
+			}
 			base.Draw(gameTime);
 		}
 	}

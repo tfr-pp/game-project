@@ -9,3 +9,9 @@
 /build:Default.spritefont
 
 /build:Sprites/Car.png
+
+/build:Sprites/BG.jpg
+
+/build:Sprites/LevelBG.png
+
+/build:Sprites/Ennemy.png

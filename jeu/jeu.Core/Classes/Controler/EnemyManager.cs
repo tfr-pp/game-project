@@ -8,14 +8,13 @@ public class EnemyManager
 {
 	private readonly List<Enemy> _enemies = [];
 
-	protected Texture2D pixel;
+	protected Texture2D ennemySprite;
 
 	public void Add(Enemy enemy) => _enemies.Add(enemy);
 
-	public void LoadContent(GraphicsDevice graphicsDevice)
+	public void LoadContent(GraphicsDevice graphicsDevice, Texture2D ennemySprite)
 	{
-		pixel = new Texture2D(graphicsDevice, 1, 1);
-		pixel.SetData([Color.White]);
+		this.ennemySprite = ennemySprite;
 	}
 
 	public void Update(float dt)
@@ -27,7 +26,7 @@ public class EnemyManager
 	public void Draw(SpriteBatch spriteBatch)
 	{
 		foreach (var enemy in _enemies)
-			enemy.Draw(spriteBatch, pixel);
+			enemy.Draw(spriteBatch, ennemySprite);
 	}
 
 	public void Clear() => _enemies.Clear();

@@ -20,6 +20,7 @@ public class GameManager
 
 	private Texture2D pixel;
 	private Texture2D carTexture;
+	private Texture2D bgLevelTexture;
 
 	private Levels levels;
 
@@ -27,10 +28,11 @@ public class GameManager
 	{
 		OnLevelCompleted = onLevelCompleted;
 	}
-	public void Load(GraphicsDevice graphicsDevice, Texture2D carTexture)
+	public void Load(GraphicsDevice graphicsDevice, Texture2D carTexture, Texture2D bgLevelTexture, Texture2D ennemySprite)
 	{
-		enemyManager.LoadContent(graphicsDevice);
+		enemyManager.LoadContent(graphicsDevice,ennemySprite);
 		this.carTexture = carTexture;
+		this.bgLevelTexture = bgLevelTexture;
 
 		pixel = new Texture2D(graphicsDevice, 1, 1);
 		pixel.SetData([Color.White]);
@@ -92,10 +94,12 @@ public class GameManager
 
 	public void Draw(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, SpriteFont font)
 	{
-		graphicsDevice.Clear(Color.CornflowerBlue);
 
 		spriteBatch.Begin();
-
+		Microsoft.Xna.Framework.Rectangle bgRect = new Microsoft.Xna.Framework.Rectangle(0, 0, graphicsDevice.PresentationParameters.BackBufferWidth,
+			graphicsDevice.PresentationParameters.BackBufferHeight);
+		spriteBatch.Draw(bgLevelTexture, bgRect, Microsoft.Xna.Framework.Color.White);
+		
 		DrawTrackLine(spriteBatch);
 
 		spriteBatch.DrawString(
@@ -123,7 +127,7 @@ public class GameManager
 	{
 		for (int i = 0; i < track.points.Count - 1; i++)
 		{
-			DrawLine(spriteBatch, track.points[i], track.points[i + 1], Color.Gray, 2f);
+			DrawLine(spriteBatch, track.points[i], track.points[i + 1], Color.Black, 2f);
 		}
 	}
 

@@ -18,7 +18,7 @@ public class Car(Track track)
 	public float rotation { get; private set; }
 	public int lives { get; private set; } = 5;
 
-	private readonly Vector2 _halfSize = new(25f, 12f);
+	private readonly Vector2 _halfSize = new(20f, 30f);
 
 	public Rectangle hitBox => GetAABB();
 
@@ -138,7 +138,7 @@ public class Car(Track track)
 			position: position,
 			sourceRectangle: null,
 			color: Color.White,
-			rotation: rotation + MathF.PI,
+			rotation: rotation,
 			origin: origin,
 			scale: scale,
 			effects: SpriteEffects.None,
