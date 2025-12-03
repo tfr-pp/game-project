@@ -1,7 +1,7 @@
 using System.Numerics;
 using System.Xml.Serialization;
 
-namespace jeu.Core.Classes;
+namespace jeu.Core.Classes.Model;
 
 public class Point
 {

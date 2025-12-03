@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Numerics;
 
-namespace jeu.Core.Classes;
+namespace jeu.Core.Classes.Model;
 
 public class Track
 {

@@ -1,8 +1,10 @@
 using System;
+using jeu.Core.Classes.Model;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace jeu.Core.Classes;
+namespace jeu.Core.Classes.Controller;
 
 public class GameManager
 {
@@ -22,29 +24,42 @@ public class GameManager
 	private Texture2D carTexture;
 	private Texture2D bgLevelTexture;
 
-	private Levels levels;
+	public Levels levels { get; private set; }
 
 	public GameManager(Action<string, float, int> onLevelCompleted)
 	{
 		OnLevelCompleted = onLevelCompleted;
 	}
-	public void Load(GraphicsDevice graphicsDevice, Texture2D carTexture, Texture2D bgLevelTexture, Texture2D ennemySprite)
+	public void Load(GraphicsDevice graphicsDevice, Texture2D carTexture, Texture2D bgLevelTexture, Texture2D ennemySprite, Texture2D pixel)
 	{
-		enemyManager.LoadContent(graphicsDevice,ennemySprite);
+		enemyManager.LoadContent(graphicsDevice, ennemySprite);
 		this.carTexture = carTexture;
 		this.bgLevelTexture = bgLevelTexture;
 
-		pixel = new Texture2D(graphicsDevice, 1, 1);
-		pixel.SetData([Color.White]);
+		this.pixel = pixel;
 
 		levels = Levels.LoadLevels();
 	}
 
-	public void LoadFirstLevel(int level)
+	public void LoadLevel(string levelId)
 	{
-		if (level < 4 && level >= 0) {currentLevelIndex = level;}
-		LoadNextLevel();
+		enemyManager.Clear();
+		currentLevelIndex = levels.LevelEntries.FindIndex(entry => entry.Id == levelId);
+
+		if (currentLevelIndex < 0)
+		{
+			currentLevelIndex = 0;
+		}
+
+		currentLevel = levels.GetLevel(currentLevelIndex);
+
+		track = new Track(currentLevel.trackPoints.ConvertAll(p => p.ToVector2()));
+		car = new Car(track);
+
+		currentLevel.enemies.ConvertAll(e => e.ToEnemy()).ForEach(enemyManager.Add);
+		levelTimer = 0f;
 	}
+
 	public void LoadNextLevel()
 	{
 		enemyManager.Clear();
@@ -55,7 +70,7 @@ public class GameManager
 			currentLevelIndex = 0;
 			currentLevel = levels.GetLevel(currentLevelIndex);
 		}
-		else if (currentLevelIndex == levels.Paths.Count)
+		else if (currentLevelIndex == levels.LevelEntries.Count)
 		{
 			currentLevelIndex = 0;
 			currentLevel = levels.GetLevel(currentLevelIndex);
@@ -99,12 +114,9 @@ public class GameManager
 
 	public void Draw(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, SpriteFont font)
 	{
+		graphicsDevice.Clear(Color.Black);
+		spriteBatch.Draw(bgLevelTexture, new Vector2(0, 0), Color.White);
 
-		spriteBatch.Begin();
-		Microsoft.Xna.Framework.Rectangle bgRect = new Microsoft.Xna.Framework.Rectangle(0, 0, graphicsDevice.PresentationParameters.BackBufferWidth,
-			graphicsDevice.PresentationParameters.BackBufferHeight);
-		spriteBatch.Draw(bgLevelTexture, bgRect, Microsoft.Xna.Framework.Color.White);
-		
 		DrawTrackLine(spriteBatch);
 
 		spriteBatch.DrawString(
@@ -124,8 +136,6 @@ public class GameManager
 		car.Draw(spriteBatch, carTexture);
 
 		enemyManager.Draw(spriteBatch);
-
-		spriteBatch.End();
 	}
 
 	private void DrawTrackLine(SpriteBatch spriteBatch)

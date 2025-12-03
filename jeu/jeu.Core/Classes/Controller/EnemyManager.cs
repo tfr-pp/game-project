@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using Microsoft.Xna.Framework;
+using jeu.Core.Classes.Model;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace jeu.Core.Classes;
+namespace jeu.Core.Classes.Controller;
 
 public class EnemyManager
 {

@@ -2,7 +2,7 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace jeu.Core.Classes;
+namespace jeu.Core.Classes.Model;
 
 public class Car(Track track)
 {

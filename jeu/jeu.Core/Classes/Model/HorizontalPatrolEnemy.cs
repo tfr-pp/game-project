@@ -1,6 +1,6 @@
 using Microsoft.Xna.Framework;
 
-namespace jeu.Core.Classes;
+namespace jeu.Core.Classes.Model;
 
 public class HorizontalPatrolEnemy(float speed, Vector2 from, Vector2 to) : Enemy(from, speed)
 {
