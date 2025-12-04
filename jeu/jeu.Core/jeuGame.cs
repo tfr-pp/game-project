@@ -13,10 +13,7 @@ namespace jeu.Core
 	{
 		MainMenu,
 		LevelSelect,
-		Playing,
-		LevelCompleted,
-		HighScores,
-		Options
+		Playing
 	}
 
 	public class JeuGame : Game

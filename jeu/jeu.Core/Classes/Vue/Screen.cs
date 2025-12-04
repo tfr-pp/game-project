@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace jeu.Core.Classes.Vue;
 
-public class Screen
+public abstract class Screen
 {
 	public Texture2D bgTexture;
 
