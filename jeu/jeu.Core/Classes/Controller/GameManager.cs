@@ -29,9 +29,9 @@ public class GameManager
 	{
 		OnLevelCompleted = onLevelCompleted;
 	}
-	public void Load(GraphicsDevice graphicsDevice, Texture2D carTexture, Texture2D bgLevelTexture, Texture2D ennemySprite, Texture2D pixel)
+	public void Load(Texture2D carTexture, Texture2D bgLevelTexture, Texture2D enemySprite, Texture2D pixel)
 	{
-		enemyManager.LoadContent(graphicsDevice, ennemySprite);
+		enemyManager.LoadContent(enemySprite);
 		this.carTexture = carTexture;
 		this.bgLevelTexture = bgLevelTexture;
 
@@ -102,7 +102,7 @@ public class GameManager
 
 		levelTimer += dt;
 
-		// Fin si la cabine atteint 100% de progression
+		// Next level if the car reaches 100% progress
 		if (car.positionAlongTrack / track.getTotalLength >= 1)
 		{
 			OnLevelCompleted.Invoke(currentLevel.id, levelTimer, car.lives);

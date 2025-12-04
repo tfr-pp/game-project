@@ -12,11 +12,6 @@ public class ScreenManager
 
 	private Screen[] gameScreens;
 	private int idCurScreen = 0;
-	/*
-		private HighScoresScreen highScoresScreen;
-		private LevelMenuScreen levelMenuScreen;
-		private OptionsMenuScreen optionsMenuScreen;
-	*/
 	public ScreenManager(GameState state, StartScreen startScreen, LevelMenuScreen levelMenuScreen)
 	{
 		gameScreens = new Screen[Enum.GetNames<GameState>().Length];
@@ -27,8 +22,6 @@ public class ScreenManager
 		{
 			GameState.MainMenu => 0,
 			GameState.LevelSelect => 1,
-			GameState.Options => 2,
-			GameState.HighScores => 3,
 			_ => throw new Exception("Unknown state: " + currentState),
 		};
 	}

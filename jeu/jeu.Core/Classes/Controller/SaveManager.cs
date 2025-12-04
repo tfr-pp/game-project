@@ -12,8 +12,7 @@ public class SaveManager
 
 	public SaveManager()
 	{
-		if (!Directory.Exists(_folder))
-			Directory.CreateDirectory(_folder);
+		if (!Directory.Exists(_folder)) Directory.CreateDirectory(_folder);
 	}
 
 	private string GetFilePath(string playerId)
@@ -21,7 +20,6 @@ public class SaveManager
 		return Path.Combine(_folder, $"{playerId}.xml");
 	}
 
-	// Charge le profil d'un joueur depuis XML
 	public PlayerProfile LoadProfile(string playerId)
 	{
 		string file = GetFilePath(playerId);
@@ -41,7 +39,6 @@ public class SaveManager
 		return (PlayerProfile)serializer.Deserialize(stream);
 	}
 
-	// Sauvegarde un profil
 	public void SaveProfile(PlayerProfile profile)
 	{
 		string file = GetFilePath(profile.Id);
@@ -50,7 +47,6 @@ public class SaveManager
 		serializer.Serialize(stream, profile);
 	}
 
-	// Complète un niveau et met à jour temps + passagers
 	public void CompleteLevel(PlayerProfile profile, string levelId, float timeSpent, int livesLeft)
 	{
 		LevelSave level = profile.Levels.Levels.Find(l => l.Id == levelId);
@@ -75,7 +71,6 @@ public class SaveManager
 		SaveProfile(profile);
 	}
 
-	// Liste tous les profils existants
 	public List<PlayerProfile> LoadAllProfiles()
 	{
 		List<PlayerProfile> profiles = [];

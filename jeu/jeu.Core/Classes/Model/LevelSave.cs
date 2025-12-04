@@ -7,8 +7,8 @@ public class LevelSave
 {
 	[XmlAttribute] public string Id { get; set; }
 	[XmlAttribute] public bool Completed { get; set; }
-	[XmlElement] public float TimeSpent { get; set; } = 0f;       // Temps mis pour finir le niveau
-	[XmlElement] public int LivesLeft { get; set; } = 0;     // Nombre de vies restantes
+	[XmlElement] public float TimeSpent { get; set; } = 0f;
+	[XmlElement] public int LivesLeft { get; set; } = 0;
 }
 
 [XmlRoot("SaveLevels")]

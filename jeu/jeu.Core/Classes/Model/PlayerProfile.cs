@@ -12,7 +12,7 @@ public class PlayerProfile
 
 	[XmlElement] public LevelsSave Levels { get; set; } = new LevelsSave();
 
-	// Options du joueur
+	// Settings
 	[XmlElement] public float MusicVolume { get; set; } = 80;
 	[XmlElement] public float SfxVolume { get; set; } = 80;
 }

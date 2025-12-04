@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using jeu.Core.Classes;
 using jeu.Core.Classes.Controller;
 using jeu.Core.Classes.Model;
 using jeu.Core.Classes.Vue;
@@ -10,7 +9,6 @@ using Microsoft.Xna.Framework.Input;
 
 namespace jeu.Core
 {
-	// Pour gérer sur quel écran on est
 	public enum GameState
 	{
 		MainMenu,
@@ -23,7 +21,8 @@ namespace jeu.Core
 
 	public class JeuGame : Game
 	{
-		private GraphicsDeviceManager graphics;
+		// Do not remove this field even if it seems unused
+		private readonly GraphicsDeviceManager graphics;
 		private SpriteBatch spriteBatch;
 
 		private PlayerProfile playerProfile;
@@ -38,14 +37,10 @@ namespace jeu.Core
 		private Texture2D carTexture;
 		private Texture2D bgTexture;
 		private Texture2D bgLevelTexture;
-		private Texture2D ennemySprite;
+		private Texture2D enemySprite;
 
 		private StartScreen startScreen;
 		private LevelMenuScreen levelMenuScreen;
-		/*
-			private HighScoresScreen highScoresScreen;
-			private OptionsMenuScreen optionsMenuScreen;
-		*/
 		private ScreenManager screenManager;
 		private Texture2D pixel;
 
@@ -65,10 +60,6 @@ namespace jeu.Core
 			currentState = GameState.MainMenu;
 			startScreen = new StartScreen();
 			levelMenuScreen = new LevelMenuScreen(font, [], null, null);
-			/*
-						highScoresScreen = new HighScoresScreen();
-						optionsMenuScreen = new OptionsMenuScreen();
-			*/
 			screenManager = new ScreenManager(currentState, startScreen, levelMenuScreen);
 			base.Initialize();
 		}
@@ -80,11 +71,11 @@ namespace jeu.Core
 			carTexture = Content.Load<Texture2D>("Sprites/Car");
 			bgTexture = Content.Load<Texture2D>("Sprites/BG");
 			bgLevelTexture = Content.Load<Texture2D>("Sprites/LevelBG");
-			ennemySprite = Content.Load<Texture2D>("Sprites/Ennemy");
+			enemySprite = Content.Load<Texture2D>("Sprites/Enemy");
 			pixel = new Texture2D(GraphicsDevice, 1, 1);
 			pixel.SetData([Color.White]);
 
-			gameManager.Load(GraphicsDevice, carTexture, bgLevelTexture, ennemySprite, pixel);
+			gameManager.Load(carTexture, bgLevelTexture, enemySprite, pixel);
 			startScreen.LoadContent(bgTexture);
 
 			saveManager = new SaveManager();
@@ -119,12 +110,10 @@ namespace jeu.Core
 			}
 			else if (currentState == GameState.MainMenu)
 			{
-				//+ gerer à la souris si possible
 				if (Array.Find(k.GetPressedKeys(), OKPressed) != Keys.None) startScreen.selectOpt(this);
 			}
 			else if (currentState == GameState.LevelSelect)
 			{
-				//+ gerer à la souris si possible
 				if (k.IsKeyDown(Keys.Down)) levelMenuScreen.KeyPressed(Keys.Down);
 				if (k.IsKeyDown(Keys.Up)) levelMenuScreen.KeyPressed(Keys.Up);
 				if (Array.Find(k.GetPressedKeys(), OKPressed) != Keys.None) levelMenuScreen.KeyPressed(Keys.Enter);
@@ -143,22 +132,24 @@ namespace jeu.Core
 			}
 			else if (state == GameState.LevelSelect)
 			{
-				var levelIds = gameManager.levels.LevelEntries.ConvertAll(entry => entry.Id);
-				levelMenuScreen = new LevelMenuScreen(font, levelIds, (levelId) =>
+				var levelNames = gameManager.levels.LevelEntries.ConvertAll(entry => entry.Name);
+				levelMenuScreen = new LevelMenuScreen(font, levelNames, (levelName) =>
 				{
-					gameManager.LoadLevel(levelId);
+					gameManager.LoadLevel(gameManager.levels.LevelEntries.Find(entry => entry.Name == levelName).Id);
 					setState(GameState.Playing);
 				}, () =>
 				{
 					setState(GameState.MainMenu);
-				});
-				levelMenuScreen.bgTexture = bgTexture;
+				})
+				{
+					bgTexture = bgTexture
+				};
 				screenManager = new ScreenManager(state, startScreen, levelMenuScreen);
 			}
 			currentState = state;
 		}
 
-		public static bool OKPressed(Keys key) //voir controlleur souris/clavier
+		public static bool OKPressed(Keys key)
 		{
 			return key.Equals(Keys.Enter) == true ||
 				   key.Equals(Keys.Space) == true ||
@@ -183,7 +174,6 @@ namespace jeu.Core
 			{
 				screenManager.Draw(GraphicsDevice, spriteBatch);
 			}
-
 			spriteBatch.End();
 			base.Draw(gameTime);
 		}

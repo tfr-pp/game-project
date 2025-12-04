@@ -4,8 +4,6 @@ using Microsoft.Xna.Framework.Input;
 
 namespace jeu.Core.Classes;
 
-// Pour l'affichage des niveaux dans le menu
-// Pas testé
 public class LevelButton(int levelId, Rectangle bounds, bool unlocked)
 {
 	public Rectangle Bounds = bounds;

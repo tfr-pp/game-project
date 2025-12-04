@@ -22,7 +22,7 @@ public class Car(Track track)
 
 	public Rectangle hitBox => GetAABB();
 
-	public Vector2[] GetRotatedHitboxCorners()
+	public Vector2[] GetRotatedHitBoxCorners()
 	{
 		var cos = MathF.Cos(rotation);
 		var sin = MathF.Sin(rotation);
@@ -50,7 +50,7 @@ public class Car(Track track)
 
 	public Rectangle GetAABB()
 	{
-		var c = GetRotatedHitboxCorners();
+		var c = GetRotatedHitBoxCorners();
 		float minX = c[0].X, minY = c[0].Y, maxX = c[0].X, maxY = c[0].Y;
 		for (int i = 1; i < c.Length; i++)
 		{
