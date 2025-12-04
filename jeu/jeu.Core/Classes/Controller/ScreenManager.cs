@@ -8,7 +8,6 @@ namespace jeu.Core.Classes.Controller;
 public class ScreenManager
 {
 	private GameState currentState;
-	private StartScreen startScreen;
 	private LevelMenuScreen levelMenuScreen;
 
 	private Screen[] gameScreens;
@@ -21,7 +20,7 @@ public class ScreenManager
 	public ScreenManager(GameState state, StartScreen startScreen, LevelMenuScreen levelMenuScreen)
 	{
 		gameScreens = new Screen[Enum.GetNames<GameState>().Length];
-		gameScreens[0] = this.startScreen = startScreen;
+		gameScreens[0] = startScreen;
 		gameScreens[1] = this.levelMenuScreen = levelMenuScreen;
 		currentState = state;
 		idCurScreen = currentState switch

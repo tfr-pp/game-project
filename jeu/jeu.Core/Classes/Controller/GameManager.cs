@@ -1,7 +1,6 @@
 using System;
 using jeu.Core.Classes.Model;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace jeu.Core.Classes.Controller;

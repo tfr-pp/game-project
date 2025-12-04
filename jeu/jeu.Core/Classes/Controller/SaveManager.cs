@@ -2,8 +2,9 @@
 using System.IO;
 using System.Xml.Serialization;
 using System.Collections.Generic;
+using jeu.Core.Classes.Model;
 
-namespace jeu.Core.Classes;
+namespace jeu.Core.Classes.Controller;
 
 public class SaveManager
 {
