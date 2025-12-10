@@ -3,7 +3,7 @@ using System.Xml.Serialization;
 
 namespace jeu.Core.Classes.Model;
 
-public class EnemyData
+public abstract class EnemyData
 {
 	[XmlAttribute] public float Speed { get; set; }
 	[XmlAttribute] public float StartX { get; set; }

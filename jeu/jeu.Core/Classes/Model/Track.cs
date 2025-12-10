@@ -32,7 +32,7 @@ public class Track
 				}
 			}
 
-			points.Add(keyPoints[keyPoints.Count - 2]);
+			points.Add(keyPoints[^2]);
 		}
 		else
 		{
