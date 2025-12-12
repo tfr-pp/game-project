@@ -27,7 +27,6 @@ public class Level
 	{
 		path = Path.Combine(AppContext.BaseDirectory, "Content", "Levels", path);
 		using var stream = File.OpenRead(path);
-		var serializer = new XmlSerializer(typeof(Level));
-		return (Level)serializer.Deserialize(stream);
+		return (Level)new XmlSerializer(typeof(Level)).Deserialize(stream);
 	}
 }
