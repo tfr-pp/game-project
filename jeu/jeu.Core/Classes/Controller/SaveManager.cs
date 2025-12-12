@@ -63,6 +63,7 @@ public class SaveManager
 		}
 		else
 		{
+			level.Id = levelId;
 			level.Completed = true;
 			level.TimeSpent = timeSpent;
 			level.LivesLeft = livesLeft;
