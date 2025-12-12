@@ -5,6 +5,9 @@ using System.Xml.Serialization;
 
 namespace jeu.Core.Classes.Model;
 
+/** Contains level data
+ * name, level id, its track, its ennemies
+ */
 [XmlRoot("Level")]
 public class Level
 {
@@ -23,6 +26,10 @@ public class Level
 	[XmlArrayItem("CircleEnemy", typeof(CircleEnemyData))]
 	public List<EnemyData> enemies;
 
+	/** Load a level from data
+	 * \param path the relative path to XML level data
+	 * \return A new deserialized level
+	 */
 	public static Level LoadLevel(string path)
 	{
 		path = Path.Combine(AppContext.BaseDirectory, "Content", "Levels", path);

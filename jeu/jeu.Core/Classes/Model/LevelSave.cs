@@ -3,6 +3,9 @@ using System.Xml.Serialization;
 
 namespace jeu.Core.Classes.Model;
 
+/** Saves info on a level for a player (is it completed, time spent, lives left) gotten from XML
+ * 
+ */
 public class LevelSave
 {
 	[XmlAttribute] public string Id { get; set; }

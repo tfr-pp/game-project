@@ -5,6 +5,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace jeu.Core.Classes.Controller;
 
+/** A manager of a skylink game
+ * 
+ */
 public class GameManager
 {
 	public Level currentLevel { get; private set; } = null;
@@ -24,6 +27,9 @@ public class GameManager
 
 	public Levels levels { get; private set; }
 
+	/** Constructor
+	 * Construct a game manager with its level completed Action
+	 */
 	public GameManager(Action<string, float, int> onLevelCompleted)
 	{
 		OnLevelCompleted = onLevelCompleted;
@@ -37,6 +43,9 @@ public class GameManager
 		levels = Levels.LoadLevels();
 	}
 
+	/** Load a Level from its id
+	 * \param id a string: the id of the Level to be loaded
+	 */
 	public void LoadLevel(string levelId)
 	{
 		enemyManager.Clear();
@@ -54,6 +63,9 @@ public class GameManager
 		levelTimer = 0f;
 	}
 
+	/** Load the next Level from Levels loaded
+	 * 
+	 */
 	public void LoadNextLevel()
 	{
 		enemyManager.Clear();

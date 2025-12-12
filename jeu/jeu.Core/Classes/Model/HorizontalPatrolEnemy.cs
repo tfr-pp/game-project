@@ -2,6 +2,9 @@ using Microsoft.Xna.Framework;
 
 namespace jeu.Core.Classes.Model;
 
+/** An ennemy following a straight path
+ * 
+ */
 public class HorizontalPatrolEnemy(float speed, Vector2 from, Vector2 to) : Enemy(from, speed)
 {
 	private readonly Vector2 _from = from;
