@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Xml.Xsl;
 using jeu.Core.Classes.Controller;
 using jeu.Core.Classes.Model;
 using jeu.Core.Classes.Vue;
@@ -40,6 +42,8 @@ namespace jeu.Core
 		private LevelMenuScreen levelMenuScreen;
 		private ScreenManager screenManager;
 		private Texture2D pixel;
+
+		private KeyboardState previousKeyboardState = Keyboard.GetState();
 
 		public JeuGame()
 		{
@@ -94,6 +98,7 @@ namespace jeu.Core
 
 			if (k.IsKeyDown(Keys.Escape)) Exit();
 
+			if (!previousKeyboardState.IsKeyDown(Keys.F5) && k.IsKeyDown(Keys.F5)) exportProfile();
 
 			if (currentState == GameState.Playing)
 			{
@@ -107,18 +112,28 @@ namespace jeu.Core
 			}
 			else if (currentState == GameState.MainMenu)
 			{
-				if (Array.Find(k.GetPressedKeys(), OKPressed) != Keys.None) startScreen.selectOpt(this);
+				if (Array.Find(previousKeyboardState.GetPressedKeys(), OKPressed) == Keys.None && Array.Find(k.GetPressedKeys(), OKPressed) != Keys.None) startScreen.selectOpt(this);
 			}
 			else if (currentState == GameState.LevelSelect)
 			{
-				if (k.IsKeyDown(Keys.Down)) levelMenuScreen.KeyPressed(Keys.Down);
-				if (k.IsKeyDown(Keys.Up)) levelMenuScreen.KeyPressed(Keys.Up);
-				if (Array.Find(k.GetPressedKeys(), OKPressed) != Keys.None) levelMenuScreen.KeyPressed(Keys.Enter);
-				if (Array.Find(k.GetPressedKeys(), NOKPressed) != Keys.None) levelMenuScreen.KeyPressed(Keys.Escape);
+				if (!previousKeyboardState.IsKeyDown(Keys.Down) && k.IsKeyDown(Keys.Down)) levelMenuScreen.KeyPressed(Keys.Down);
+				if (!previousKeyboardState.IsKeyDown(Keys.Up) && k.IsKeyDown(Keys.Up)) levelMenuScreen.KeyPressed(Keys.Up);
+				if (Array.Find(previousKeyboardState.GetPressedKeys(), OKPressed) == Keys.None && Array.Find(k.GetPressedKeys(), OKPressed) != Keys.None) levelMenuScreen.KeyPressed(Keys.Enter);
+				if (Array.Find(previousKeyboardState.GetPressedKeys(), NOKPressed) == Keys.None && Array.Find(k.GetPressedKeys(), NOKPressed) != Keys.None) levelMenuScreen.KeyPressed(Keys.Escape);
 			}
 
+			previousKeyboardState = k;
 
 			base.Update(gameTime);
+		}
+
+		private void exportProfile()
+		{
+			var xslt = new XslCompiledTransform();
+			string baseDir = AppContext.BaseDirectory;
+			xslt.Load(Path.Combine(baseDir, "Content", "export_profile.xslt"));
+
+			xslt.Transform(Path.Combine("Saves", playerProfile.Id + ".xml"), Path.Combine("Export", "PlayerProfile.html"));
 		}
 
 		public void setState(GameState state)
