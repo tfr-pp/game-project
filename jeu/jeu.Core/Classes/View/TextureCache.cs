@@ -3,6 +3,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace jeu.Core.Classes.Model;
 
+/** Class TextureCache
+ * Load a single pixel as a Texture2D to use it for drawing (used a lot to draw track)
+ */
 public static class TextureCache
 {
 	public static Texture2D Pixel;

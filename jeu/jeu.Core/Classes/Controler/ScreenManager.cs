@@ -1,9 +1,9 @@
 using System;
-using jeu.Core.Classes.Vue;
+using jeu.Core.Classes.View;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace jeu.Core.Classes.Controller;
+namespace jeu.Core.Classes.Controler;
 
 /** A manager for every skylink view/screen
  * 

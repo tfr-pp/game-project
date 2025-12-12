@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 using System.Collections.Generic;
 using jeu.Core.Classes.Model;
 
-namespace jeu.Core.Classes.Controller;
+namespace jeu.Core.Classes.Controler;
 
 /** A SaveManager of a skylink game
  * saves game data in "./Saves"

@@ -9,10 +9,10 @@ namespace jeu.Core.Classes.Model;
  */
 public class Car(Track track)
 {
-	private static readonly float MAX_SPEED = 400f;
-	private static readonly float ACCELERATION = 500f;
-	private static readonly float FRICTION = 60f;
-	private static readonly float GRAVITY_ACCEL = 150f;
+	private static readonly float MAX_SPEED = 400f; /**	Maximum acceleration of car, also gives minimum by its inverse: MIN_SPEED = -MAX_SPEED*/
+	private static readonly float ACCELERATION = 500f; /** Car acceleration */
+	private static readonly float FRICTION = 60f; /** Friction of car along track*/
+	private static readonly float GRAVITY_ACCEL = 150f; /** Gravity acceleration */
 
 	private readonly Track track = track;
 	public float positionAlongTrack { get; private set; } = 0f;
