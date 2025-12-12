@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml.Xsl;
-using jeu.Core.Classes.Controler;
 using jeu.Core.Classes.Controller;
 using jeu.Core.Classes.Model;
 using jeu.Core.Classes.View;
@@ -160,7 +159,7 @@ namespace jeu.Core
 					{
 						setState(GameState.MainMenu);
 					});
-					levelMenuScreen.setBG(bgTexture);
+				levelMenuScreen.setBgTexture(bgTexture);
 				screenManager = new ScreenManager(state, startScreen, levelMenuScreen);
 			}
 			else if (state == GameState.MainMenu)
