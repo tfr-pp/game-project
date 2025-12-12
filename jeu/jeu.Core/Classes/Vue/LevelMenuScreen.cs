@@ -19,9 +19,9 @@ public class LevelMenuScreen(SpriteFont font, List<string> levelsNames, List<str
 
 	public void Draw(SpriteBatch sb)
 	{
-		var vp = sb.GraphicsDevice.Viewport;
-		var centerX = vp.Width * 0.5f;
-		var startY = vp.Height * 0.30f;
+		Viewport vp = sb.GraphicsDevice.Viewport;
+		float centerX = vp.Width * 0.5f;
+		float startY = vp.Height * 0.30f;
 
 		sb.Draw(
 			TextureCache.Pixel,
@@ -31,9 +31,8 @@ public class LevelMenuScreen(SpriteFont font, List<string> levelsNames, List<str
 		);
 
 		string title = "Selectionner un niveau";
-		var sizeTitle = font.MeasureString(title);
 		sb.DrawString(font, title,
-			new Vector2(centerX - sizeTitle.X / 2, startY - 80),
+			new Vector2(centerX - font.MeasureString(title).X / 2, startY - 80),
 			Color.White);
 
 		for (int i = 0; i < levelsNames.Count; i++)

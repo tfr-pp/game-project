@@ -26,7 +26,7 @@ public class Level
 	public static Level LoadLevel(string path)
 	{
 		path = Path.Combine(AppContext.BaseDirectory, "Content", "Levels", path);
-		using var stream = File.OpenRead(path);
+		FileStream stream = File.OpenRead(path);
 		return (Level)new XmlSerializer(typeof(Level)).Deserialize(stream);
 	}
 }

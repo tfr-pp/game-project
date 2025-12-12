@@ -75,7 +75,7 @@ public class GameManager
 	{
 		car.Update(dt);
 
-		foreach (var enemy in enemyManager.GetEnemies())
+		foreach (Enemy enemy in enemyManager.GetEnemies())
 		{
 			if (car.hitBox.Intersects(enemy.hitBox))
 				car.HitEnemy(enemy.Speed);
@@ -119,10 +119,10 @@ public class GameManager
 
 		enemyManager.Draw(spriteBatch);
 
-		var vp = graphicsDevice.Viewport;
-		var textSize = font.MeasureString(currentLevel.name);
+		Viewport vp = graphicsDevice.Viewport;
+		Vector2 textSize = font.MeasureString(currentLevel.name);
 
-		var pos = new Vector2(
+		Vector2 pos = new(
 			vp.Width / 2f - textSize.X / 2f,
 			vp.Height / 12f
 		);

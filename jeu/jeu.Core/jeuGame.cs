@@ -93,7 +93,7 @@ namespace jeu.Core
 
 		protected override void Update(GameTime gameTime)
 		{
-			var k = Keyboard.GetState();
+			KeyboardState k = Keyboard.GetState();
 
 			if (k.IsKeyDown(Keys.Escape)) Exit();
 
@@ -129,9 +129,8 @@ namespace jeu.Core
 
 		private void exportProfile()
 		{
-			var xslt = new XslCompiledTransform();
-			string baseDir = AppContext.BaseDirectory;
-			xslt.Load(Path.Combine(baseDir, "Content", "export_profile.xslt"));
+			XslCompiledTransform xslt = new();
+			xslt.Load(Path.Combine(AppContext.BaseDirectory, "Content", "export_profile.xslt"));
 
 			xslt.Transform(Path.Combine("Saves", playerProfile.Id + ".xml"), Path.Combine("Export", "PlayerProfile.html"));
 		}

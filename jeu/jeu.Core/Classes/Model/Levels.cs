@@ -13,10 +13,8 @@ public class Levels
 
 	public static Levels LoadLevels()
 	{
-		var path = Path.Combine(AppContext.BaseDirectory, "Content", "Levels", "levels.xml");
-		using var stream = File.OpenRead(path);
-		var serializer = new XmlSerializer(typeof(Levels));
-		return (Levels)serializer.Deserialize(stream);
+		FileStream stream = File.OpenRead(Path.Combine(AppContext.BaseDirectory, "Content", "Levels", "levels.xml"));
+		return (Levels)new XmlSerializer(typeof(Levels)).Deserialize(stream);
 	}
 
 	public Level GetLevel(int index)

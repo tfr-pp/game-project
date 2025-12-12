@@ -22,7 +22,7 @@ public class ScreenManager
 	public void Draw(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch)
 	{
 		graphicsDevice.Clear(Color.Black);
-		var pp = graphicsDevice.PresentationParameters;
+		PresentationParameters pp = graphicsDevice.PresentationParameters;
 		Rectangle bgRect = new(0, 0, pp.BackBufferWidth, pp.BackBufferHeight);
 
 		Texture2D bgTexture = gameScreens[currentState == GameState.MainMenu ? 0 : 1].getBgTexture();

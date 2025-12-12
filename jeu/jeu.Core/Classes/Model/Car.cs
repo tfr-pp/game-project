@@ -24,22 +24,22 @@ public class Car(Track track)
 
 	public Vector2[] GetRotatedHitBoxCorners()
 	{
-		var cos = MathF.Cos(rotation);
-		var sin = MathF.Sin(rotation);
+		float cos = MathF.Cos(rotation);
+		float sin = MathF.Sin(rotation);
 
-		var local = new Vector2[]
-		{
+		Vector2[] local =
+		[
 			new(-_halfSize.X, -_halfSize.Y),
 			new( _halfSize.X, -_halfSize.Y),
 			new( _halfSize.X,  _halfSize.Y),
 			new(-_halfSize.X,  _halfSize.Y),
-		};
+		];
 
-		var corners = new Vector2[4];
+		Vector2[] corners = new Vector2[4];
 		for (int i = 0; i < 4; i++)
 		{
-			var x = local[i].X;
-			var y = local[i].Y;
+			float x = local[i].X;
+			float y = local[i].Y;
 			corners[i] = new Vector2(
 				x * cos - y * sin + position.X,
 				x * sin + y * cos + position.Y
@@ -50,7 +50,7 @@ public class Car(Track track)
 
 	public Rectangle GetAABB()
 	{
-		var c = GetRotatedHitBoxCorners();
+		Vector2[] c = GetRotatedHitBoxCorners();
 		float minX = c[0].X, minY = c[0].Y, maxX = c[0].X, maxY = c[0].Y;
 		for (int i = 1; i < c.Length; i++)
 		{
@@ -84,7 +84,7 @@ public class Car(Track track)
 
 		ClampPositionAlongTrack();
 
-		var tangent = track.GetTangentAtDistance(positionAlongTrack);
+		Vector2 tangent = track.GetTangentAtDistance(positionAlongTrack);
 		rotation = MathF.Atan2(tangent.Y, tangent.X);
 
 		// Dead zone for very low speeds
@@ -111,11 +111,11 @@ public class Car(Track track)
 	{
 		lives = Math.Max(0, lives - 1);
 
-		var relative = enemySpeed - speed;
+		float relative = enemySpeed - speed;
 
-		var impulse = MathF.Abs(relative) * 0.8f + 100f;
+		float impulse = MathF.Abs(relative) * 0.8f + 100f;
 
-		var direction = relative != 0f ? MathF.Sign(relative) : (speed > 0f ? -1f : 1f);
+		float direction = relative != 0f ? MathF.Sign(relative) : (speed > 0f ? -1f : 1f);
 
 		speed = Math.Clamp(speed + direction * impulse, -MAX_SPEED, MAX_SPEED);
 
@@ -128,11 +128,11 @@ public class Car(Track track)
 	{
 		if (carTexture == null) return;
 
-		var origin = new Vector2(carTexture.Width / 2f, carTexture.Height / 2f);
+		Vector2 origin = new(carTexture.Width / 2f, carTexture.Height / 2f);
 
-		var scaleX = _halfSize.X * 2f / carTexture.Width;
-		var scaleY = _halfSize.Y * 2f / carTexture.Height;
-		var scale = new Vector2(scaleX, scaleY);
+		float scaleX = _halfSize.X * 2f / carTexture.Width;
+		float scaleY = _halfSize.Y * 2f / carTexture.Height;
+		Vector2 scale = new(scaleX, scaleY);
 
 		spriteBatch.Draw(carTexture,
 			position: position,
@@ -147,9 +147,9 @@ public class Car(Track track)
 
 	public void ApplyGravity(float dt)
 	{
-		var tangent = track.GetTangentAtDistance(positionAlongTrack);
-		var gravityDir = new Vector2(0f, 1f);
-		var accelAlongTangent = Vector2.Dot(gravityDir, tangent) * GRAVITY_ACCEL;
+		Vector2 tangent = track.GetTangentAtDistance(positionAlongTrack);
+		Vector2 gravityDir = new(0f, 1f);
+		float accelAlongTangent = Vector2.Dot(gravityDir, tangent) * GRAVITY_ACCEL;
 		speed = Math.Clamp(speed + accelAlongTangent * dt, -MAX_SPEED, MAX_SPEED);
 	}
 }
