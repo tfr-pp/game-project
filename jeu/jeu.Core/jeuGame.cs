@@ -129,10 +129,16 @@ namespace jeu.Core
 
 		private void exportProfile()
 		{
+			string path = Path.Combine("Saves", playerProfile.Id + ".xml");
+			if (!File.Exists(path)) return;
+
+			if (!Directory.Exists("Export"))
+				Directory.CreateDirectory("Export");
+
 			XslCompiledTransform xslt = new();
 			xslt.Load(Path.Combine(AppContext.BaseDirectory, "Content", "export_profile.xslt"));
 
-			xslt.Transform(Path.Combine("Saves", playerProfile.Id + ".xml"), Path.Combine("Export", "PlayerProfile.html"));
+			xslt.Transform(path, Path.Combine("Export", "PlayerProfile.html"));
 		}
 
 		public void setState(GameState state)
