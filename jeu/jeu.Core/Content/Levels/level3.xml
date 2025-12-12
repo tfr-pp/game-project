@@ -1,0 +1,20 @@
+<Level>
+	<Id>3</Id>
+	<Name>Level 3</Name>
+	<Track>
+		<Point X="100" Y="100" />
+		<Point X="200" Y="150" />
+		<Point X="80" Y="300" />
+		<Point X="700" Y="100" />
+		<Point X="700" Y="200" />
+		<Point X="50" Y="400" />
+		<Point X="350" Y="200" />
+		<Point X="700" Y="450" />
+		<Point X="50" Y="200" />
+		<Point X="70" Y="400" />
+		<Point X="300" Y="300" />
+	</Track>
+	<Enemies>
+		<HorizontalPatrolEnemy Speed="50" StartX="200" StartY="500" EndX="400" EndY="250" />
+	</Enemies>
+</Level>
