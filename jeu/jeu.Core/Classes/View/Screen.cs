@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 namespace jeu.Core.Classes.View;
 
 /** A Screen abstract class for every game view
- * 
+ *
  */
 public abstract class Screen
 {

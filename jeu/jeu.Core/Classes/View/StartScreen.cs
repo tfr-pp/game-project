@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 namespace jeu.Core.Classes.View;
 
 /** A StartScreen class for title view
- * 
+ *
  */
 public class StartScreen : Screen
 {

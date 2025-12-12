@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 namespace jeu.Core.Classes.Controler;
 
 /** A manager for every skylink view/screen
- * 
+ *
  */
 public class ScreenManager
 {

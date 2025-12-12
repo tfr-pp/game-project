@@ -2,7 +2,7 @@
 
 Tiny game project made with monogame
 
-The game isn’t finished yet. We’ve started working on a level-selection menu screen, but the menu system is really messy at the moment. We preferred to focus on the physics to make the game playable rather than on visual effects and menus.
+The game isn’t finished yet. We still have to work on a settings screen, a death screen, more levels, etc. We preferred to focus on the physics and reliability to make the game playable rather than on visual effects and menus.
 
 ## Requirements
 
@@ -23,10 +23,14 @@ Go to jeu.DesktopGL and run:
     [X] Car physics
     [X] Track system and optimizing
     [X] Enemy movement and collision
-    [X] XML saving levels
+    [X] XML levels
     [X] XML saving player profile
     [X] Importing textures
     [X] Menu system and level selection
-    [ ] Better level select menu
+    [X] XML to HTML via XSLT export
     [ ] More levels
-    [ ] XML to HTML via XSLT export
+    [ ] Death screen
+    [ ] Settings
+    [ ] Profile creation
+    [ ] Profile changing
+    [ ] Leaderboard screen

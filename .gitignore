@@ -6,10 +6,9 @@
 **/*.exe
 
 # DOC GENERATED
-doc/*
+doc/
 
- # IDE
- **/.vscode/
- **/.idea/
- 
- 
+# IDE
+**/.vscode/
+**/.idea/
+
