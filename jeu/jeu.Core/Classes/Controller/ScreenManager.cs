@@ -7,32 +7,25 @@ namespace jeu.Core.Classes.Controller;
 
 public class ScreenManager
 {
-	private GameState currentState;
-	private LevelMenuScreen levelMenuScreen;
+	private readonly GameState currentState = GameState.MainMenu;
+	private readonly LevelMenuScreen levelMenuScreen;
+	private readonly Screen[] gameScreens;
 
-	private Screen[] gameScreens;
-	private int idCurScreen = 0;
 	public ScreenManager(GameState state, StartScreen startScreen, LevelMenuScreen levelMenuScreen)
 	{
 		gameScreens = new Screen[Enum.GetNames<GameState>().Length];
 		gameScreens[0] = startScreen;
 		gameScreens[1] = this.levelMenuScreen = levelMenuScreen;
 		currentState = state;
-		idCurScreen = currentState switch
-		{
-			GameState.MainMenu => 0,
-			GameState.LevelSelect => 1,
-			_ => throw new Exception("Unknown state: " + currentState),
-		};
 	}
 
 	public void Draw(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch)
 	{
 		graphicsDevice.Clear(Color.Black);
-		var pp = graphicsDevice.PresentationParameters;
+		PresentationParameters pp = graphicsDevice.PresentationParameters;
 		Rectangle bgRect = new(0, 0, pp.BackBufferWidth, pp.BackBufferHeight);
 
-		Texture2D bgTexture = gameScreens[idCurScreen].getBgTexture();
+		Texture2D bgTexture = gameScreens[currentState == GameState.MainMenu ? 0 : 1].getBgTexture();
 
 		spriteBatch.Draw(bgTexture, bgRect, Color.White);
 
@@ -41,5 +34,4 @@ public class ScreenManager
 			levelMenuScreen.Draw(spriteBatch);
 		}
 	}
-
 }

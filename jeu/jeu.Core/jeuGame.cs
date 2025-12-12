@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Xml.Xsl;
 using jeu.Core.Classes.Controller;
 using jeu.Core.Classes.Model;
 using jeu.Core.Classes.Vue;
@@ -39,7 +41,8 @@ namespace jeu.Core
 		private StartScreen startScreen;
 		private LevelMenuScreen levelMenuScreen;
 		private ScreenManager screenManager;
-		private Texture2D pixel;
+
+		private KeyboardState previousKeyboardState = Keyboard.GetState();
 
 		public JeuGame()
 		{
@@ -56,8 +59,10 @@ namespace jeu.Core
 			});
 			currentState = GameState.MainMenu;
 			startScreen = new StartScreen();
-			levelMenuScreen = new LevelMenuScreen(font, [], null, null);
+			levelMenuScreen = new LevelMenuScreen(font, [], [], null, null);
 			screenManager = new ScreenManager(currentState, startScreen, levelMenuScreen);
+
+			TextureCache.Initialize(GraphicsDevice);
 			base.Initialize();
 		}
 
@@ -69,10 +74,8 @@ namespace jeu.Core
 			bgTexture = Content.Load<Texture2D>("Sprites/BG");
 			bgLevelTexture = Content.Load<Texture2D>("Sprites/LevelBG");
 			enemySprite = Content.Load<Texture2D>("Sprites/Enemy");
-			pixel = new Texture2D(GraphicsDevice, 1, 1);
-			pixel.SetData([Color.White]);
 
-			gameManager.Load(carTexture, bgLevelTexture, enemySprite, pixel);
+			gameManager.Load(carTexture, bgLevelTexture, enemySprite);
 			startScreen.LoadContent(bgTexture);
 
 			saveManager = new SaveManager();
@@ -90,10 +93,11 @@ namespace jeu.Core
 
 		protected override void Update(GameTime gameTime)
 		{
-			var k = Keyboard.GetState();
+			KeyboardState k = Keyboard.GetState();
 
 			if (k.IsKeyDown(Keys.Escape)) Exit();
 
+			if (!previousKeyboardState.IsKeyDown(Keys.F5) && k.IsKeyDown(Keys.F5)) exportProfile();
 
 			if (currentState == GameState.Playing)
 			{
@@ -107,18 +111,34 @@ namespace jeu.Core
 			}
 			else if (currentState == GameState.MainMenu)
 			{
-				if (Array.Find(k.GetPressedKeys(), OKPressed) != Keys.None) startScreen.selectOpt(this);
+				if (Array.Find(previousKeyboardState.GetPressedKeys(), OKPressed) == Keys.None && Array.Find(k.GetPressedKeys(), OKPressed) != Keys.None) startScreen.selectOpt(this);
 			}
 			else if (currentState == GameState.LevelSelect)
 			{
-				if (k.IsKeyDown(Keys.Down)) levelMenuScreen.KeyPressed(Keys.Down);
-				if (k.IsKeyDown(Keys.Up)) levelMenuScreen.KeyPressed(Keys.Up);
-				if (Array.Find(k.GetPressedKeys(), OKPressed) != Keys.None) levelMenuScreen.KeyPressed(Keys.Enter);
-				if (Array.Find(k.GetPressedKeys(), NOKPressed) != Keys.None) levelMenuScreen.KeyPressed(Keys.Escape);
+				if (!previousKeyboardState.IsKeyDown(Keys.Down) && k.IsKeyDown(Keys.Down)) levelMenuScreen.KeyPressed(Keys.Down);
+				else if (!previousKeyboardState.IsKeyDown(Keys.Up) && k.IsKeyDown(Keys.Up)) levelMenuScreen.KeyPressed(Keys.Up);
+				else if (Array.Find(previousKeyboardState.GetPressedKeys(), OKPressed) == Keys.None && Array.Find(k.GetPressedKeys(), OKPressed) != Keys.None) levelMenuScreen.KeyPressed(Keys.Enter);
+				else if (Array.Find(previousKeyboardState.GetPressedKeys(), NOKPressed) == Keys.None && Array.Find(k.GetPressedKeys(), NOKPressed) != Keys.None) levelMenuScreen.KeyPressed(Keys.Escape);
+				else levelMenuScreen.KeyPressed(Keys.None);
 			}
 
+			previousKeyboardState = k;
 
 			base.Update(gameTime);
+		}
+
+		private void exportProfile()
+		{
+			string path = Path.Combine("Saves", playerProfile.Id + ".xml");
+			if (!File.Exists(path)) return;
+
+			if (!Directory.Exists("Export"))
+				Directory.CreateDirectory("Export");
+
+			XslCompiledTransform xslt = new();
+			xslt.Load(Path.Combine(AppContext.BaseDirectory, "Content", "export_profile.xslt"));
+
+			xslt.Transform(path, Path.Combine("Export", "PlayerProfile.html"));
 		}
 
 		public void setState(GameState state)
@@ -129,11 +149,10 @@ namespace jeu.Core
 			}
 			else if (state == GameState.LevelSelect)
 			{
-				var levelNames = gameManager.levels.LevelEntries.ConvertAll(entry => entry.Name);
-				levelMenuScreen = new LevelMenuScreen(font, levelNames, (levelName) =>
+				levelMenuScreen = new LevelMenuScreen(font, gameManager.levels.LevelEntries.ConvertAll(entry => entry.Name), gameManager.levels.LevelEntries.ConvertAll(entry => entry.Id), (levelId) =>
 				{
-					gameManager.LoadLevel(gameManager.levels.LevelEntries.Find(entry => entry.Name == levelName).Id);
-					setState(GameState.Playing);
+					gameManager.LoadLevel(levelId);
+					currentState = GameState.Playing;
 				}, () =>
 				{
 					setState(GameState.MainMenu);
@@ -141,6 +160,10 @@ namespace jeu.Core
 				{
 					bgTexture = bgTexture
 				};
+				screenManager = new ScreenManager(state, startScreen, levelMenuScreen);
+			}
+			else if (state == GameState.MainMenu)
+			{
 				screenManager = new ScreenManager(state, startScreen, levelMenuScreen);
 			}
 			currentState = state;

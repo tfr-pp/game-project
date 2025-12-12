@@ -19,11 +19,11 @@ public abstract class Enemy(Vector2 startPosition, float speed)
 	public abstract void Update(float dt);
 	public virtual void Draw(SpriteBatch spriteBatch, Texture2D enemySprite)
 	{
-		var origin = new Vector2(enemySprite.Width / 2f, enemySprite.Height / 2f);
+		Vector2 origin = new(enemySprite.Width / 2f, enemySprite.Height / 2f);
 
-		var scaleX = _halfSize.X * 2f / enemySprite.Width;
-		var scaleY = _halfSize.Y * 2f / enemySprite.Height;
-		var scale = new Vector2(scaleX, scaleY);
+		float scaleX = _halfSize.X * 2f / enemySprite.Width;
+		float scaleY = _halfSize.Y * 2f / enemySprite.Height;
+		Vector2 scale = new(scaleX, scaleY);
 
 		spriteBatch.Draw(enemySprite,
 			position: Position,

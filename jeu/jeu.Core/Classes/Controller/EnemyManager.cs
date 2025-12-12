@@ -19,13 +19,13 @@ public class EnemyManager
 
 	public void Update(float dt)
 	{
-		foreach (var enemy in _enemies)
+		foreach (Enemy enemy in _enemies)
 			enemy.Update(dt);
 	}
 
 	public void Draw(SpriteBatch spriteBatch)
 	{
-		foreach (var enemy in _enemies)
+		foreach (Enemy enemy in _enemies)
 			enemy.Draw(spriteBatch, enemySprite);
 	}
 

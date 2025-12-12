@@ -17,12 +17,10 @@ public class Track
 		{
 			points = [];
 
-			var keyPoints = new List<Vector2>
-			{
-				init_points[0]
-			};
-			keyPoints.AddRange(init_points);
-			keyPoints.Add(init_points[^1]);
+			List<Vector2> keyPoints =
+			[
+				init_points[0], .. init_points, init_points[^1]
+			];
 
 			for (int i = 0; i < keyPoints.Count - 3; i++)
 			{

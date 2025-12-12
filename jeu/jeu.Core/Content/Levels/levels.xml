@@ -1,4 +1,5 @@
 <Levels>
 	<Level path="level1.xml" id="1" name="Level 1" />
 	<Level path="level2.xml" id="2" name="Level 2" />
+	<Level path="level3.xml" level="3" name="Level 3" />
 </Levels>

@@ -19,7 +19,6 @@ public class GameManager
 
 	public event Action<string, float, int> OnLevelCompleted;
 
-	private Texture2D pixel;
 	private Texture2D carTexture;
 	private Texture2D bgLevelTexture;
 
@@ -29,13 +28,11 @@ public class GameManager
 	{
 		OnLevelCompleted = onLevelCompleted;
 	}
-	public void Load(Texture2D carTexture, Texture2D bgLevelTexture, Texture2D enemySprite, Texture2D pixel)
+	public void Load(Texture2D carTexture, Texture2D bgLevelTexture, Texture2D enemySprite)
 	{
 		enemyManager.LoadContent(enemySprite);
 		this.carTexture = carTexture;
 		this.bgLevelTexture = bgLevelTexture;
-
-		this.pixel = pixel;
 
 		levels = Levels.LoadLevels();
 	}
@@ -46,9 +43,7 @@ public class GameManager
 		currentLevelIndex = levels.LevelEntries.FindIndex(entry => entry.Id == levelId);
 
 		if (currentLevelIndex < 0)
-		{
 			currentLevelIndex = 0;
-		}
 
 		currentLevel = levels.GetLevel(currentLevelIndex);
 
@@ -64,20 +59,10 @@ public class GameManager
 		enemyManager.Clear();
 		currentLevelIndex++;
 
-		if (currentLevelIndex < 0)
-		{
+		if (currentLevelIndex < 0 || currentLevelIndex == levels.LevelEntries.Count)
 			currentLevelIndex = 0;
-			currentLevel = levels.GetLevel(currentLevelIndex);
-		}
-		else if (currentLevelIndex == levels.LevelEntries.Count)
-		{
-			currentLevelIndex = 0;
-			currentLevel = levels.GetLevel(currentLevelIndex);
-		}
-		else
-		{
-			currentLevel = levels.GetLevel(currentLevelIndex);
-		}
+
+		currentLevel = levels.GetLevel(currentLevelIndex);
 
 		track = new Track(currentLevel.trackPoints.ConvertAll(p => p.ToVector2()));
 		car = new Car(track);
@@ -90,12 +75,10 @@ public class GameManager
 	{
 		car.Update(dt);
 
-		foreach (var enemy in enemyManager.GetEnemies())
+		foreach (Enemy enemy in enemyManager.GetEnemies())
 		{
 			if (car.hitBox.Intersects(enemy.hitBox))
-			{
 				car.HitEnemy(enemy.Speed);
-			}
 		}
 
 		enemyManager.Update(dt);
@@ -135,7 +118,20 @@ public class GameManager
 		car.Draw(spriteBatch, carTexture);
 
 		enemyManager.Draw(spriteBatch);
+
+		Viewport vp = graphicsDevice.Viewport;
+		Vector2 textSize = font.MeasureString(currentLevel.name);
+
+		Vector2 pos = new(
+			vp.Width / 2f - textSize.X / 2f,
+			vp.Height / 12f
+		);
+
+		spriteBatch.DrawString(font, currentLevel.name, pos + new Vector2(2, 2), Color.Black * 0.6f);
+
+		spriteBatch.DrawString(font, currentLevel.name, pos, Color.White);
 	}
+
 
 	private void DrawTrackLine(SpriteBatch spriteBatch)
 	{
@@ -145,13 +141,13 @@ public class GameManager
 		}
 	}
 
-	private void DrawLine(SpriteBatch sb, Vector2 start, Vector2 end, Color color, float thickness)
+	private static void DrawLine(SpriteBatch sb, Vector2 start, Vector2 end, Color color, float thickness)
 	{
 		Vector2 edge = end - start;
 		float angle = (float)Math.Atan2(edge.Y, edge.X);
 
 		sb.Draw(
-			pixel,
+			TextureCache.Pixel,
 			new Rectangle(
 				(int)start.X - 1,
 				(int)start.Y - 1,
