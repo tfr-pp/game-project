@@ -5,8 +5,11 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace jeu.Core.Classes.Vue;
+namespace jeu.Core.Classes.View;
 
+/** A LevelMenuScreen class for selecting levels view
+ *
+ */
 public class LevelMenuScreen(SpriteFont font, List<string> levelsNames, List<string> levelsIds, Action<string> onSelect, Action onBack) : Screen
 {
 	private readonly SpriteFont font = font;
@@ -61,6 +64,9 @@ public class LevelMenuScreen(SpriteFont font, List<string> levelsNames, List<str
 		}
 	}
 
+	/** Changes menu selection up or down (doesn't wrap)
+	 * \param key the key pressed
+	 */
 	public void KeyPressed(Keys key)
 	{
 		if (key == Keys.Down && prevK != Keys.Down)

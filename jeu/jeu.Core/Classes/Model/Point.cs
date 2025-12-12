@@ -3,7 +3,10 @@ using System.Xml.Serialization;
 
 namespace jeu.Core.Classes.Model;
 
-public class Point
+/** A point of coordinates X, Y, convertible to Vector2D
+ * 
+ */
+public class Point //pk ????
 {
 	[XmlAttribute]
 	public float X { get; set; }

@@ -5,6 +5,9 @@ using System.Xml.Serialization;
 
 namespace jeu.Core.Classes.Model;
 
+/** Contains all levels data
+ * 
+ */
 [XmlRoot("Levels")]
 public class Levels
 {

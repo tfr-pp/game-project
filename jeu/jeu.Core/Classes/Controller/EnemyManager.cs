@@ -4,12 +4,18 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace jeu.Core.Classes.Controller;
 
+/** A manager for enemies
+ * 
+ */
 public class EnemyManager
 {
 	private readonly List<Enemy> _enemies = [];
 
 	protected Texture2D enemySprite;
 
+	/** Add an enemy to manage
+	 * \param enemy the Enemy to add
+	 */
 	public void Add(Enemy enemy) => _enemies.Add(enemy);
 
 	public void LoadContent(Texture2D enemySprite)

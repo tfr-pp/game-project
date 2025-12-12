@@ -4,6 +4,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace jeu.Core.Classes.Model;
 
+/** A cable car the player controls 
+ * Is created with a track
+ */
 public class Car(Track track)
 {
 	private static readonly float MAX_SPEED = 400f;
@@ -22,6 +25,9 @@ public class Car(Track track)
 
 	public Rectangle hitBox => GetAABB();
 
+	/** Get the rotated hitbox of car
+	 * \return A 4 Vector2D array corresponding to each angle
+	 */
 	public Vector2[] GetRotatedHitBoxCorners()
 	{
 		float cos = MathF.Cos(rotation);
@@ -48,6 +54,9 @@ public class Car(Track track)
 		return corners;
 	}
 
+	/** Get the hitbox of car
+	 * \return A 4 Vector2D array corresponding to each angle
+	 */
 	public Rectangle GetAABB()
 	{
 		Vector2[] c = GetRotatedHitBoxCorners();
@@ -62,6 +71,9 @@ public class Car(Track track)
 		return new Rectangle((int)minX, (int)minY, (int)(maxX - minX), (int)(maxY - minY));
 	}
 
+	/** Restraint the car position between the beginning and the end of the track
+	 * 
+	 */
 	private void ClampPositionAlongTrack()
 	{
 		if (positionAlongTrack < 0f)
@@ -91,22 +103,35 @@ public class Car(Track track)
 		if (speed > -0.5f && speed < 0.5f) speed = 0f;
 	}
 
+	/** Augment car speed of ACCELERATION constant
+	 * Bound by MAX_SPEED and its inverse
+	 * \param dt a float: the expected acceleration
+	 */
 	public void Accelerate(float dt)
 	{
 		speed = Math.Clamp(speed + (ACCELERATION * dt), -MAX_SPEED, MAX_SPEED);
 	}
-
+	/** Diminish car speed of ACCELERATION constant
+	 * Bound by MAX_SPEED and its inverse
+	 * \param dt a float: the expected diminish
+	 */
 	public void Decelerate(float dt)
 	{
 		speed = Math.Clamp(speed - (ACCELERATION * dt), -MAX_SPEED, MAX_SPEED);
 	}
 
+	/** Apply track friction to the car
+	 * \param dt a float: the expected friction
+	 */
 	public void ApplyFriction(float dt)
 	{
 		if (speed > 0) speed = Math.Max(0, speed - FRICTION * dt);
 		else if (speed < 0) speed = Math.Min(0, speed + FRICTION * dt);
 	}
 
+	/** Apply the effect of hitting an enemy
+	 * Effects: lives-1, speed diminish, pk??
+	 */
 	public void HitEnemy(float enemySpeed)
 	{
 		lives = Math.Max(0, lives - 1);
@@ -128,7 +153,7 @@ public class Car(Track track)
 	{
 		if (carTexture == null) return;
 
-		Vector2 origin = new(carTexture.Width / 2f, carTexture.Height / 2f);
+		Vector2 origin = new(carTexture.Width / 2f, 0);
 
 		float scaleX = _halfSize.X * 2f / carTexture.Width;
 		float scaleY = _halfSize.Y * 2f / carTexture.Height;
@@ -145,6 +170,9 @@ public class Car(Track track)
 			layerDepth: 0f);
 	}
 
+	/** Apply the gravity to the car
+	 * \param dt a float: the acceleration consireding gravity
+	 */
 	public void ApplyGravity(float dt)
 	{
 		Vector2 tangent = track.GetTangentAtDistance(positionAlongTrack);

@@ -3,6 +3,9 @@ using System.Xml.Serialization;
 
 namespace jeu.Core.Classes.Model;
 
+/** Informations about our player (name, id, personal settings) gotten from XML
+ * 
+ */
 [XmlRoot("PlayerProfile")]
 public class PlayerProfile
 {

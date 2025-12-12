@@ -3,6 +3,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace jeu.Core.Classes.Model;
 
+/** An enemy
+ * Needs a start position and a speed
+ */
 public abstract class Enemy(Vector2 startPosition, float speed)
 {
 	private readonly Vector2 _halfSize = new(40f, 20f);

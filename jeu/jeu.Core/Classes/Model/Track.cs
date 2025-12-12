@@ -2,7 +2,9 @@ using System.Collections.Generic;
 using System.Numerics;
 
 namespace jeu.Core.Classes.Model;
-
+/** Track contains the data to make a track that can carry our cable car
+ * 
+ */
 public class Track
 {
 	public List<Vector2> points { get; private set; }
@@ -10,10 +12,13 @@ public class Track
 	private float totalLength;
 	public float getTotalLength => totalLength;
 
+	/** Intancies a Track along its init_points
+	 * 
+	 */
 	public Track(List<Vector2> init_points)
 	// points where track rail goes and "clean" the curving or not of path
 	{
-		if (init_points.Count >= 4)
+		if (init_points.Count >= 4) //pk ?
 		{
 			points = [];
 
@@ -24,7 +29,7 @@ public class Track
 
 			for (int i = 0; i < keyPoints.Count - 3; i++)
 			{
-				for (float t = 0; t < 1; t += 0.01f)
+				for (float t = 0; t < 1; t += 0.01f) //interpolate
 				{
 					points.Add(CatmullRom(keyPoints[i], keyPoints[i + 1], keyPoints[i + 2], keyPoints[i + 3], t));
 				}
@@ -47,7 +52,10 @@ public class Track
 			totalLength += segmentLength;
 		}
 	}
-
+	/** Get the distance between s and the end of the track
+	 *  \param s a float along the track
+	 *  \return The distance to closest points member to s if s is between points, the first point if s negative, the last if s superior to total track length  
+	 */
 	public Vector2 GetPositionAtDistance(float s)
 	{
 		if (s <= 0f) return points[0];
@@ -63,6 +71,10 @@ public class Track
 		return points[^1];
 	}
 
+	/** Get the direction of s along the track
+	 *	\param s a float along the track
+	 *	\return The closest segment track direction, the first segment direction if s negative, the last segment direction if s is superior to track length 
+	 */
 	public Vector2 GetTangentAtDistance(float s)
 	{
 		if (s <= 0f) return Vector2.Normalize(points[1] - points[0]);
@@ -77,7 +89,14 @@ public class Track
 		}
 		return Vector2.UnitX;
 	}
-
+	/** Calculate the catmull-rom spline on a segment
+	 * \param p0 control point of p1
+	 * \param p1 first point of the segment
+	 * \param p2 second point of the segment
+	 * \param p3 control point of p2
+	 * \param t a float, the tension of the curve
+	 * \return The computed vector
+	 */
 	public static Vector2 CatmullRom(Vector2 p0, Vector2 p1, Vector2 p2, Vector2 p3, float t)
 	{
 		return 0.5f * (

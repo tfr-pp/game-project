@@ -3,6 +3,9 @@ using Microsoft.Xna.Framework;
 
 namespace jeu.Core.Classes.Model;
 
+/** An ennemy runnning into circles
+ * 
+ */
 public class CircleEnemy(Vector2 startPosition,
 					 float speed, float amplitude) : Enemy(startPosition, speed)
 {

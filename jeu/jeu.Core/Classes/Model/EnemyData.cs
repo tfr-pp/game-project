@@ -3,6 +3,9 @@ using System.Xml.Serialization;
 
 namespace jeu.Core.Classes.Model;
 
+/** Contains an ennemy data
+ * its speed, its starting position
+ */
 public abstract class EnemyData
 {
 	[XmlAttribute] public float Speed { get; set; }
@@ -14,6 +17,9 @@ public abstract class EnemyData
 	}
 }
 
+/** Contains an HorizontalEnemy data
+ * Inherited members from EnemyData plus its ending position
+ */
 public class HorizontalPatrolEnemyData : EnemyData
 {
 	[XmlAttribute] public float EndX { get; set; }
@@ -28,6 +34,9 @@ public class HorizontalPatrolEnemyData : EnemyData
 	}
 }
 
+/** Contains a CicleEnemy data
+ *	Inherited members from EnemyData plus its amplitude and frequency
+ */
 public class CircleEnemyData : EnemyData
 {
 	[XmlAttribute] public float Amplitude { get; set; }

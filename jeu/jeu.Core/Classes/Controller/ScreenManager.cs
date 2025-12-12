@@ -1,16 +1,24 @@
 using System;
-using jeu.Core.Classes.Vue;
+using jeu.Core.Classes.View;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace jeu.Core.Classes.Controller;
 
+/** A manager for every skylink view/screen
+ *
+ */
 public class ScreenManager
 {
 	private readonly GameState currentState = GameState.MainMenu;
 	private readonly LevelMenuScreen levelMenuScreen;
 	private readonly Screen[] gameScreens;
 
+	/** Constructor
+	 * \param state a member of GameState enum, the current state of the game
+	 * \param startScreen a StartScreen, the displayed screen when launching the game
+	 * \param levelMenuScreen a LevelMenuScreen, the displayed screen when selecting a level
+	 */
 	public ScreenManager(GameState state, StartScreen startScreen, LevelMenuScreen levelMenuScreen)
 	{
 		gameScreens = new Screen[Enum.GetNames<GameState>().Length];

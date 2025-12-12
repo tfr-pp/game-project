@@ -4,7 +4,7 @@ using System.IO;
 using System.Xml.Xsl;
 using jeu.Core.Classes.Controller;
 using jeu.Core.Classes.Model;
-using jeu.Core.Classes.Vue;
+using jeu.Core.Classes.View;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
