@@ -20,6 +20,11 @@ public class LevelMenuScreen(SpriteFont font, List<string> levelsNames, List<str
 	private int selected = 0;
 	private Keys prevK;
 
+	public void setBG(Texture2D bgTexture)
+	{
+		this.bgTexture = bgTexture;
+	}
+
 	public void Draw(SpriteBatch sb)
 	{
 		Viewport vp = sb.GraphicsDevice.Viewport;

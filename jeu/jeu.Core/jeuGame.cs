@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml.Xsl;
+using jeu.Core.Classes.Controler;
 using jeu.Core.Classes.Controller;
 using jeu.Core.Classes.Model;
 using jeu.Core.Classes.View;
@@ -149,17 +150,17 @@ namespace jeu.Core
 			}
 			else if (state == GameState.LevelSelect)
 			{
-				levelMenuScreen = new LevelMenuScreen(font, gameManager.levels.LevelEntries.ConvertAll(entry => entry.Name), gameManager.levels.LevelEntries.ConvertAll(entry => entry.Id), (levelId) =>
-				{
-					gameManager.LoadLevel(levelId);
-					currentState = GameState.Playing;
-				}, () =>
-				{
-					setState(GameState.MainMenu);
-				})
-				{
-					bgTexture = bgTexture
-				};
+				levelMenuScreen = new LevelMenuScreen(font,
+					gameManager.levels.LevelEntries.ConvertAll(entry => entry.Name),
+					gameManager.levels.LevelEntries.ConvertAll(entry => entry.Id), (levelId) =>
+					{
+						gameManager.LoadLevel(levelId);
+						currentState = GameState.Playing;
+					}, () =>
+					{
+						setState(GameState.MainMenu);
+					});
+					levelMenuScreen.setBG(bgTexture);
 				screenManager = new ScreenManager(state, startScreen, levelMenuScreen);
 			}
 			else if (state == GameState.MainMenu)
