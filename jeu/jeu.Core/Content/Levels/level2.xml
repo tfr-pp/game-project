@@ -1,5 +1,5 @@
 <Level>
-	<id>2</id>
+	<Id>2</Id>
 	<Name>Level 2</Name>
 	<Track>
 		<Point X="100" Y="100" />

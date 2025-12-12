@@ -34,17 +34,14 @@ public class SaveManager
 			};
 		}
 
-		XmlSerializer serializer = new(typeof(PlayerProfile));
 		using FileStream stream = File.OpenRead(file);
-		return (PlayerProfile)serializer.Deserialize(stream);
+		return (PlayerProfile)new XmlSerializer(typeof(PlayerProfile)).Deserialize(stream);
 	}
 
 	public void SaveProfile(PlayerProfile profile)
 	{
-		string file = GetFilePath(profile.Id);
-		XmlSerializer serializer = new(typeof(PlayerProfile));
-		using FileStream stream = File.Create(file);
-		serializer.Serialize(stream, profile);
+		using FileStream stream = File.Create(GetFilePath(profile.Id));
+		new XmlSerializer(typeof(PlayerProfile)).Serialize(stream, profile);
 	}
 
 	public void CompleteLevel(PlayerProfile profile, string levelId, float timeSpent, int livesLeft)
@@ -52,14 +49,13 @@ public class SaveManager
 		LevelSave level = profile.Levels.Levels.Find(l => l.Id == levelId);
 		if (level == null)
 		{
-			level = new LevelSave
+			profile.Levels.Levels.Add(new LevelSave
 			{
 				Id = levelId,
 				Completed = true,
 				TimeSpent = timeSpent,
 				LivesLeft = livesLeft
-			};
-			profile.Levels.Levels.Add(level);
+			});
 		}
 		else
 		{
@@ -78,9 +74,9 @@ public class SaveManager
 		if (!Directory.Exists(_folder))
 			return profiles;
 
+		XmlSerializer serializer = new(typeof(PlayerProfile));
 		foreach (string file in Directory.GetFiles(_folder, "*.xml"))
 		{
-			XmlSerializer serializer = new(typeof(PlayerProfile));
 			using FileStream stream = File.OpenRead(file);
 			profiles.Add((PlayerProfile)serializer.Deserialize(stream));
 		}
