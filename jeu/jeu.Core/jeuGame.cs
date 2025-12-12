@@ -149,14 +149,16 @@ namespace jeu.Core
 			}
 			else if (state == GameState.LevelSelect)
 			{
-				levelMenuScreen = new LevelMenuScreen(font, gameManager.levels.LevelEntries.ConvertAll(entry => entry.Name), gameManager.levels.LevelEntries.ConvertAll(entry => entry.Id), (levelId) =>
-				{
-					gameManager.LoadLevel(levelId);
-					currentState = GameState.Playing;
-				}, () =>
-				{
-					setState(GameState.MainMenu);
-				});
+				levelMenuScreen = new LevelMenuScreen(font,
+					gameManager.levels.LevelEntries.ConvertAll(entry => entry.Name),
+					gameManager.levels.LevelEntries.ConvertAll(entry => entry.Id), (levelId) =>
+					{
+						gameManager.LoadLevel(levelId);
+						currentState = GameState.Playing;
+					}, () =>
+					{
+						setState(GameState.MainMenu);
+					});
 				levelMenuScreen.setBgTexture(bgTexture);
 				screenManager = new ScreenManager(state, startScreen, levelMenuScreen);
 			}
