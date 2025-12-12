@@ -8,7 +8,7 @@ namespace jeu.Core.Classes.View;
  */
 public abstract class Screen
 {
-	public Texture2D bgTexture;
+	protected Texture2D bgTexture;
 
 	/** Gets the texture for view background
 	 * \return Texture2D the background texture
@@ -24,5 +24,10 @@ public abstract class Screen
 		{
 			return bgTexture;
 		}
+	}
+
+	public void setBgTexture(Texture2D texture)
+	{
+		bgTexture = texture;
 	}
 }

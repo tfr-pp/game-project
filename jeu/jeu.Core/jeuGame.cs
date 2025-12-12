@@ -156,10 +156,8 @@ namespace jeu.Core
 				}, () =>
 				{
 					setState(GameState.MainMenu);
-				})
-				{
-					bgTexture = bgTexture
-				};
+				});
+				levelMenuScreen.setBgTexture(bgTexture);
 				screenManager = new ScreenManager(state, startScreen, levelMenuScreen);
 			}
 			else if (state == GameState.MainMenu)
