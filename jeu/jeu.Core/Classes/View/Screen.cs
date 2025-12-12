@@ -25,4 +25,9 @@ public abstract class Screen
 			return bgTexture;
 		}
 	}
+
+	public void setBgTexture(Texture2D texture)
+	{
+		bgTexture = texture;
+	}
 }

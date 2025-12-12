@@ -1,7 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace jeu.Core.Classes.Model;
+namespace jeu.Core.Classes.View;
 
 /** Class TextureCache
  * Load a single pixel as a Texture2D to use it for drawing (used a lot to draw track)

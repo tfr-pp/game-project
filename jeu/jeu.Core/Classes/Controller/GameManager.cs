@@ -1,12 +1,13 @@
 using System;
 using jeu.Core.Classes.Model;
+using jeu.Core.Classes.View;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace jeu.Core.Classes.Controller;
 
 /** A manager of a skylink game
- * 
+ *
  */
 public class GameManager
 {
@@ -64,7 +65,7 @@ public class GameManager
 	}
 
 	/** Load the next Level from Levels loaded
-	 * 
+	 *
 	 */
 	public void LoadNextLevel()
 	{
